@@ -1,0 +1,32 @@
+---
+title: "TEST"
+format: html
+editor: visual
+---
+
+
+```{r}
+library(tidyverse)
+
+foster_data <- read_csv("https://garberadamc.github.io/PSY150_DATA/data/foster_care_sim_Yampolskaya12.csv")
+
+cannabis_data <- read_csv("https://garberadamc.github.io/PSY150_DATA/data/cannabis_dreams_siblings_SIM.csv")
+
+irreg_sleep <- read_csv("https://garberadamc.github.io/PSY150_DATA/data/irreg_sleep_wellbeing_simulated.csv")
+
+nutr_data <- read_csv("https://garberadamc.github.io/PSY150_DATA/data/nutrition_academics_sim_N577_v4.csv")
+
+peer_data <- read_csv("https://garberadamc.github.io/PSY150_DATA/data/peerpressure_imposter_mh_SIM2.csv")
+
+screen_data <- read_csv("https://garberadamc.github.io/PSY150_DATA/data/screen_attention_sim_N104.csv")
+
+sleep_data <- read_csv("https://garberadamc.github.io/PSY150_DATA/data/sleep_insomnia_college_sim_N557.csv")
+
+social_data <- read_csv("https://garberadamc.github.io/PSY150_DATA/data/social_media_adolescent_sim.csv")
+
+music_data <- read_csv("https://garberadamc.github.io/PSY150_DATA/data/
+
+trauma_data <- read_csv("https://garberadamc.github.io/PSY150_DATA/data/
+
+```
+
