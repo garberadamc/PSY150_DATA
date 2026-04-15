@@ -24,9 +24,9 @@ sleep_data <- read_csv("https://garberadamc.github.io/PSY150_DATA/data/sleep_ins
 
 social_data <- read_csv("https://garberadamc.github.io/PSY150_DATA/data/social_media_adolescent_sim.csv")
 
-music_data <- read_csv("https://garberadamc.github.io/PSY150_DATA/data/
+music_data <- read_csv("https://garberadamc.github.io/PSY150_DATA/data/meaning_music_anx_mem_sim.csv")
 
-trauma_data <- read_csv("https://garberadamc.github.io/PSY150_DATA/data/
+trauma_data <- read_csv("https://garberadamc.github.io/PSY150_DATA/data/ptsd_memory_hypnosis_sim.csv")
 
 ```
 
