@@ -1,6 +1,6 @@
 ---
-title: "Lab Week 10 - Evaluating Experimental Data"
-subtitle: "PSY 150"
+title: "Lab Week 9 - Evaluating Experimental Data"
+subtitle: "PSY 150: KEY"
 author: "Instructor: Adam Garber"
 date: "`r Sys.Date()`"
 format:
