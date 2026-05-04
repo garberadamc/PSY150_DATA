@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="KEY">
-<meta name="dcterms.date" content="2026-03-04">
+<meta name="dcterms.date" content="2026-05-04">
 
 <title>Week 4 Lab: Exploring the National Health &amp; Nutrition Examination Survey (NHANES)</title>
 <style>
@@ -59,16 +59,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="LAB_W4_KEY_files/libs/clipboard/clipboard.min.js"></script>
-<script src="LAB_W4_KEY_files/libs/quarto-html/quarto.js"></script>
-<script src="LAB_W4_KEY_files/libs/quarto-html/popper.min.js"></script>
-<script src="LAB_W4_KEY_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="LAB_W4_KEY_files/libs/quarto-html/anchor.min.js"></script>
-<link href="LAB_W4_KEY_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="LAB_W4_KEY_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="LAB_W4_KEY_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="LAB_W4_KEY_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="LAB_W4_KEY_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="W4_LAB_KEY_files/libs/clipboard/clipboard.min.js"></script>
+<script src="W4_LAB_KEY_files/libs/quarto-html/quarto.js"></script>
+<script src="W4_LAB_KEY_files/libs/quarto-html/popper.min.js"></script>
+<script src="W4_LAB_KEY_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="W4_LAB_KEY_files/libs/quarto-html/anchor.min.js"></script>
+<link href="W4_LAB_KEY_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="W4_LAB_KEY_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="W4_LAB_KEY_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="W4_LAB_KEY_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="W4_LAB_KEY_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
 
 </head>
@@ -99,7 +99,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">March 4, 2026</p>
+      <p class="date">May 4, 2026</p>
     </div>
   </div>
   
@@ -250,6 +250,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span> </span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>variable, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W4_LAB_KEY_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 </div>
 <hr>
 </section>
@@ -278,6 +285,184 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">p.numeric   =</span> <span class="cn">TRUE</span>,  <span class="co"># print (p-value) / (*) notation use 'FALSE' </span></span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"Age range: 18 - 20 (N = 310)"</span></span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>Age range: 18 - 20 (N = 310)</caption>
+<colgroup>
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" style="font-style: italic; font-weight: normal; border-top: double black; border-bottom: 1px solid black; padding: 0.2cm">&nbsp;</td>
+<td data-quarto-table-cell-role="th" style="font-style: italic; font-weight: normal; border-top: double black; border-bottom: 1px solid black; padding: 0.2cm">depression_scale</td>
+<td data-quarto-table-cell-role="th" style="font-style: italic; font-weight: normal; border-top: double black; border-bottom: 1px solid black; padding: 0.2cm">sex_female</td>
+<td data-quarto-table-cell-role="th" style="font-style: italic; font-weight: normal; border-top: double black; border-bottom: 1px solid black; padding: 0.2cm">outdoors_workday</td>
+<td data-quarto-table-cell-role="th" style="font-style: italic; font-weight: normal; border-top: double black; border-bottom: 1px solid black; padding: 0.2cm">outdoors_nonwork</td>
+<td data-quarto-table-cell-role="th" style="font-style: italic; font-weight: normal; border-top: double black; border-bottom: 1px solid black; padding: 0.2cm">walk_or_bike_days</td>
+<td data-quarto-table-cell-role="th" style="font-style: italic; font-weight: normal; border-top: double black; border-bottom: 1px solid black; padding: 0.2cm">vig_recreation_days</td>
+<td data-quarto-table-cell-role="th" style="font-style: italic; font-weight: normal; border-top: double black; border-bottom: 1px solid black; padding: 0.2cm">mod_recreation_days</td>
+<td data-quarto-table-cell-role="th" style="font-style: italic; font-weight: normal; border-top: double black; border-bottom: 1px solid black; padding: 0.2cm">sleep_hours_weekday</td>
+<td data-quarto-table-cell-role="th" style="font-style: italic; font-weight: normal; border-top: double black; border-bottom: 1px solid black; padding: 0.2cm">sleep_hours_weekend</td>
+</tr>
+<tr class="even">
+<td style="font-style: italic">depression_scale</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+</tr>
+<tr class="odd">
+<td style="font-style: italic">sex_female</td>
+<td style="text-align: center; padding: 0.2cm;">-0.17<br>
+<span style="font-style:italic;">(&lt;.001)</span></td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+</tr>
+<tr class="even">
+<td style="font-style: italic">outdoors_workday</td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.12<br>
+<span style="font-style:italic;">(.35)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.17<br>
+<span style="font-style:italic;">(.19)</span></td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+</tr>
+<tr class="odd">
+<td style="font-style: italic">outdoors_nonwork</td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.24<br>
+<span style="font-style:italic;">(.05)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.10<br>
+<span style="font-style:italic;">(.44)</span></td>
+<td style="text-align: center; padding: 0.2cm;">0.35<br>
+<span style="font-style:italic;">(.01)</span></td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+</tr>
+<tr class="even">
+<td style="font-style: italic">walk_or_bike_days</td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.06<br>
+<span style="font-style:italic;">(.51)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.03<br>
+<span style="font-style:italic;">(.77)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.10<br>
+<span style="font-style:italic;">(.69)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.01<br>
+<span style="font-style:italic;">(.97)</span></td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+</tr>
+<tr class="odd">
+<td style="font-style: italic">vig_recreation_days</td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.00<br>
+<span style="font-style:italic;">(.98)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.04<br>
+<span style="font-style:italic;">(.70)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.06<br>
+<span style="font-style:italic;">(.81)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.34<br>
+<span style="font-style:italic;">(.16)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.05<br>
+<span style="font-style:italic;">(.83)</span></td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+</tr>
+<tr class="even">
+<td style="font-style: italic">mod_recreation_days</td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.02<br>
+<span style="font-style:italic;">(.83)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.04<br>
+<span style="font-style:italic;">(.65)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.02<br>
+<span style="font-style:italic;">(.90)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.20<br>
+<span style="font-style:italic;">(.23)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.18<br>
+<span style="font-style:italic;">(.20)</span></td>
+<td style="text-align: center; padding: 0.2cm;">0.64<br>
+<span style="font-style:italic;">(&lt;.001)</span></td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+</tr>
+<tr class="odd">
+<td style="font-style: italic">sleep_hours_weekday</td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.03<br>
+<span style="font-style:italic;">(.60)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.02<br>
+<span style="font-style:italic;">(.75)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.10<br>
+<span style="font-style:italic;">(.43)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.09<br>
+<span style="font-style:italic;">(.49)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.04<br>
+<span style="font-style:italic;">(.70)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.09<br>
+<span style="font-style:italic;">(.42)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.02<br>
+<span style="font-style:italic;">(.83)</span></td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+</tr>
+<tr class="even">
+<td style="font-style: italic">sleep_hours_weekend</td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.05<br>
+<span style="font-style:italic;">(.43)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.07<br>
+<span style="font-style:italic;">(.24)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.03<br>
+<span style="font-style:italic;">(.79)</span></td>
+<td style="text-align: center; padding: 0.2cm;">-0.25<br>
+<span style="font-style:italic;">(.05)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.02<br>
+<span style="font-style:italic;">(.79)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.07<br>
+<span style="font-style:italic;">(.55)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.01<br>
+<span style="font-style:italic;">(.90)</span></td>
+<td style="text-align: center; padding: 0.2cm;">0.27<br>
+<span style="font-style:italic;">(&lt;.001)</span></td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+</tr>
+<tr class="odd">
+<td colspan="10" style="text-align: right; border-bottom: double black; border-top: 1px solid black; font-style: italic; font-size: 0.9em;">Computed correlation used pearson-method with pairwise-deletion.</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <p><strong>Question 1:</strong> Interpret the correlation between <code>depression_scale</code> &amp; <code>sex_female</code> (direction, strength, significance)</p>
 <p><strong>Response:</strong> __________________________________________</p>
@@ -295,6 +480,184 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">p.numeric   =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"Age range: 18 - 24 (N = 597)"</span></span>
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>Age range: 18 - 24 (N = 597)</caption>
+<colgroup>
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" style="font-style: italic; font-weight: normal; border-top: double black; border-bottom: 1px solid black; padding: 0.2cm">&nbsp;</td>
+<td data-quarto-table-cell-role="th" style="font-style: italic; font-weight: normal; border-top: double black; border-bottom: 1px solid black; padding: 0.2cm">depression_scale</td>
+<td data-quarto-table-cell-role="th" style="font-style: italic; font-weight: normal; border-top: double black; border-bottom: 1px solid black; padding: 0.2cm">sex_female</td>
+<td data-quarto-table-cell-role="th" style="font-style: italic; font-weight: normal; border-top: double black; border-bottom: 1px solid black; padding: 0.2cm">outdoors_workday</td>
+<td data-quarto-table-cell-role="th" style="font-style: italic; font-weight: normal; border-top: double black; border-bottom: 1px solid black; padding: 0.2cm">outdoors_nonwork</td>
+<td data-quarto-table-cell-role="th" style="font-style: italic; font-weight: normal; border-top: double black; border-bottom: 1px solid black; padding: 0.2cm">walk_or_bike_days</td>
+<td data-quarto-table-cell-role="th" style="font-style: italic; font-weight: normal; border-top: double black; border-bottom: 1px solid black; padding: 0.2cm">vig_recreation_days</td>
+<td data-quarto-table-cell-role="th" style="font-style: italic; font-weight: normal; border-top: double black; border-bottom: 1px solid black; padding: 0.2cm">mod_recreation_days</td>
+<td data-quarto-table-cell-role="th" style="font-style: italic; font-weight: normal; border-top: double black; border-bottom: 1px solid black; padding: 0.2cm">sleep_hours_weekday</td>
+<td data-quarto-table-cell-role="th" style="font-style: italic; font-weight: normal; border-top: double black; border-bottom: 1px solid black; padding: 0.2cm">sleep_hours_weekend</td>
+</tr>
+<tr class="even">
+<td style="font-style: italic">depression_scale</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+</tr>
+<tr class="odd">
+<td style="font-style: italic">sex_female</td>
+<td style="text-align: center; padding: 0.2cm;">-0.13<br>
+<span style="font-style:italic;">(&lt;.001)</span></td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+</tr>
+<tr class="even">
+<td style="font-style: italic">outdoors_workday</td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.07<br>
+<span style="font-style:italic;">(.22)</span></td>
+<td style="text-align: center; padding: 0.2cm;">0.26<br>
+<span style="font-style:italic;">(&lt;.001)</span></td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+</tr>
+<tr class="odd">
+<td style="font-style: italic">outdoors_nonwork</td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.07<br>
+<span style="font-style:italic;">(.16)</span></td>
+<td style="text-align: center; padding: 0.2cm;">0.17<br>
+<span style="font-style:italic;">(&lt;.001)</span></td>
+<td style="text-align: center; padding: 0.2cm;">0.35<br>
+<span style="font-style:italic;">(&lt;.001)</span></td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+</tr>
+<tr class="even">
+<td style="font-style: italic">walk_or_bike_days</td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.06<br>
+<span style="font-style:italic;">(.43)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.08<br>
+<span style="font-style:italic;">(.25)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.09<br>
+<span style="font-style:italic;">(.34)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.03<br>
+<span style="font-style:italic;">(.80)</span></td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+</tr>
+<tr class="odd">
+<td style="font-style: italic">vig_recreation_days</td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.01<br>
+<span style="font-style:italic;">(.85)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.06<br>
+<span style="font-style:italic;">(.45)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.09<br>
+<span style="font-style:italic;">(.32)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.07<br>
+<span style="font-style:italic;">(.44)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.06<br>
+<span style="font-style:italic;">(.64)</span></td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+</tr>
+<tr class="even">
+<td style="font-style: italic">mod_recreation_days</td>
+<td style="text-align: center; padding: 0.2cm;">0.12<br>
+<span style="font-style:italic;">(.04)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.05<br>
+<span style="font-style:italic;">(.42)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.06<br>
+<span style="font-style:italic;">(.43)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.07<br>
+<span style="font-style:italic;">(.36)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.19<br>
+<span style="font-style:italic;">(.05)</span></td>
+<td style="text-align: center; padding: 0.2cm;">0.64<br>
+<span style="font-style:italic;">(&lt;.001)</span></td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+</tr>
+<tr class="odd">
+<td style="font-style: italic">sleep_hours_weekday</td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.06<br>
+<span style="font-style:italic;">(.13)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.04<br>
+<span style="font-style:italic;">(.35)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.02<br>
+<span style="font-style:italic;">(.72)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.10<br>
+<span style="font-style:italic;">(.05)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.07<br>
+<span style="font-style:italic;">(.28)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.10<br>
+<span style="font-style:italic;">(.20)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.06<br>
+<span style="font-style:italic;">(.31)</span></td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+</tr>
+<tr class="even">
+<td style="font-style: italic">sleep_hours_weekend</td>
+<td style="text-align: center; padding: 0.2cm;">-0.10<br>
+<span style="font-style:italic;">(.02)</span></td>
+<td style="text-align: center; padding: 0.2cm;">-0.10<br>
+<span style="font-style:italic;">(.01)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.06<br>
+<span style="font-style:italic;">(.27)</span></td>
+<td style="text-align: center; padding: 0.2cm;">-0.14<br>
+<span style="font-style:italic;">(.01)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.01<br>
+<span style="font-style:italic;">(.84)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.05<br>
+<span style="font-style:italic;">(.49)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.07<br>
+<span style="font-style:italic;">(.24)</span></td>
+<td style="text-align: center; padding: 0.2cm;">0.36<br>
+<span style="font-style:italic;">(&lt;.001)</span></td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+</tr>
+<tr class="odd">
+<td colspan="10" style="text-align: right; border-bottom: double black; border-top: 1px solid black; font-style: italic; font-size: 0.9em;">Computed correlation used pearson-method with pairwise-deletion.</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <p><strong>Question 3:</strong> What are two reasons which can explain why the correlations are now significant in this new sample (column 1)?</p>
 <p><strong>Response:</strong> __________________________________________</p>
@@ -310,6 +673,184 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">p.numeric   =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"Age range: 30 - 60 (N = 2423)"</span> </span>
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>Age range: 30 - 60 (N = 2423)</caption>
+<colgroup>
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" style="font-style: italic; font-weight: normal; border-top: double black; border-bottom: 1px solid black; padding: 0.2cm">&nbsp;</td>
+<td data-quarto-table-cell-role="th" style="font-style: italic; font-weight: normal; border-top: double black; border-bottom: 1px solid black; padding: 0.2cm">depression_scale</td>
+<td data-quarto-table-cell-role="th" style="font-style: italic; font-weight: normal; border-top: double black; border-bottom: 1px solid black; padding: 0.2cm">sex_female</td>
+<td data-quarto-table-cell-role="th" style="font-style: italic; font-weight: normal; border-top: double black; border-bottom: 1px solid black; padding: 0.2cm">outdoors_workday</td>
+<td data-quarto-table-cell-role="th" style="font-style: italic; font-weight: normal; border-top: double black; border-bottom: 1px solid black; padding: 0.2cm">outdoors_nonwork</td>
+<td data-quarto-table-cell-role="th" style="font-style: italic; font-weight: normal; border-top: double black; border-bottom: 1px solid black; padding: 0.2cm">walk_or_bike_days</td>
+<td data-quarto-table-cell-role="th" style="font-style: italic; font-weight: normal; border-top: double black; border-bottom: 1px solid black; padding: 0.2cm">vig_recreation_days</td>
+<td data-quarto-table-cell-role="th" style="font-style: italic; font-weight: normal; border-top: double black; border-bottom: 1px solid black; padding: 0.2cm">mod_recreation_days</td>
+<td data-quarto-table-cell-role="th" style="font-style: italic; font-weight: normal; border-top: double black; border-bottom: 1px solid black; padding: 0.2cm">sleep_hours_weekday</td>
+<td data-quarto-table-cell-role="th" style="font-style: italic; font-weight: normal; border-top: double black; border-bottom: 1px solid black; padding: 0.2cm">sleep_hours_weekend</td>
+</tr>
+<tr class="even">
+<td style="font-style: italic">depression_scale</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+</tr>
+<tr class="odd">
+<td style="font-style: italic">sex_female</td>
+<td style="text-align: center; padding: 0.2cm;">-0.09<br>
+<span style="font-style:italic;">(&lt;.001)</span></td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+</tr>
+<tr class="even">
+<td style="font-style: italic">outdoors_workday</td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.01<br>
+<span style="font-style:italic;">(.67)</span></td>
+<td style="text-align: center; padding: 0.2cm;">0.30<br>
+<span style="font-style:italic;">(&lt;.001)</span></td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+</tr>
+<tr class="odd">
+<td style="font-style: italic">outdoors_nonwork</td>
+<td style="text-align: center; padding: 0.2cm;">-0.06<br>
+<span style="font-style:italic;">(&lt;.001)</span></td>
+<td style="text-align: center; padding: 0.2cm;">0.18<br>
+<span style="font-style:italic;">(&lt;.001)</span></td>
+<td style="text-align: center; padding: 0.2cm;">0.35<br>
+<span style="font-style:italic;">(&lt;.001)</span></td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+</tr>
+<tr class="even">
+<td style="font-style: italic">walk_or_bike_days</td>
+<td style="text-align: center; padding: 0.2cm;">0.09<br>
+<span style="font-style:italic;">(.03)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.07<br>
+<span style="font-style:italic;">(.11)</span></td>
+<td style="text-align: center; padding: 0.2cm;">0.11<br>
+<span style="font-style:italic;">(.01)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.06<br>
+<span style="font-style:italic;">(.16)</span></td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+</tr>
+<tr class="odd">
+<td style="font-style: italic">vig_recreation_days</td>
+<td style="text-align: center; padding: 0.2cm;">0.08<br>
+<span style="font-style:italic;">(.04)</span></td>
+<td style="text-align: center; padding: 0.2cm;">0.08<br>
+<span style="font-style:italic;">(.05)</span></td>
+<td style="text-align: center; padding: 0.2cm;">0.17<br>
+<span style="font-style:italic;">(&lt;.001)</span></td>
+<td style="text-align: center; padding: 0.2cm;">0.15<br>
+<span style="font-style:italic;">(&lt;.001)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.07<br>
+<span style="font-style:italic;">(.36)</span></td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+</tr>
+<tr class="even">
+<td style="font-style: italic">mod_recreation_days</td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.00<br>
+<span style="font-style:italic;">(.88)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.01<br>
+<span style="font-style:italic;">(.66)</span></td>
+<td style="text-align: center; padding: 0.2cm;">0.16<br>
+<span style="font-style:italic;">(&lt;.001)</span></td>
+<td style="text-align: center; padding: 0.2cm;">0.16<br>
+<span style="font-style:italic;">(&lt;.001)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.03<br>
+<span style="font-style:italic;">(.59)</span></td>
+<td style="text-align: center; padding: 0.2cm;">0.58<br>
+<span style="font-style:italic;">(&lt;.001)</span></td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+</tr>
+<tr class="odd">
+<td style="font-style: italic">sleep_hours_weekday</td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">0.01<br>
+<span style="font-style:italic;">(.73)</span></td>
+<td style="text-align: center; padding: 0.2cm;">-0.11<br>
+<span style="font-style:italic;">(&lt;.001)</span></td>
+<td style="text-align: center; padding: 0.2cm;">-0.06<br>
+<span style="font-style:italic;">(&lt;.001)</span></td>
+<td style="text-align: center; padding: 0.2cm;">-0.06<br>
+<span style="font-style:italic;">(&lt;.001)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.01<br>
+<span style="font-style:italic;">(.74)</span></td>
+<td style="text-align: center; padding: 0.2cm;">-0.09<br>
+<span style="font-style:italic;">(.02)</span></td>
+<td style="text-align: center; padding: 0.2cm;">-0.08<br>
+<span style="font-style:italic;">(.01)</span></td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+</tr>
+<tr class="even">
+<td style="font-style: italic">sleep_hours_weekend</td>
+<td style="text-align: center; padding: 0.2cm;">-0.06<br>
+<span style="font-style:italic;">(&lt;.001)</span></td>
+<td style="text-align: center; padding: 0.2cm;">-0.11<br>
+<span style="font-style:italic;">(&lt;.001)</span></td>
+<td style="text-align: center; padding: 0.2cm;">-0.06<br>
+<span style="font-style:italic;">(.01)</span></td>
+<td style="text-align: center; padding: 0.2cm;">-0.07<br>
+<span style="font-style:italic;">(&lt;.001)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.04<br>
+<span style="font-style:italic;">(.39)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.06<br>
+<span style="font-style:italic;">(.13)</span></td>
+<td style="text-align: center; padding: 0.2cm; color: #999999;">-0.04<br>
+<span style="font-style:italic;">(.15)</span></td>
+<td style="text-align: center; padding: 0.2cm;">0.47<br>
+<span style="font-style:italic;">(&lt;.001)</span></td>
+<td style="text-align: center; padding: 0.2cm;">&nbsp;</td>
+</tr>
+<tr class="odd">
+<td colspan="10" style="text-align: right; border-bottom: double black; border-top: 1px solid black; font-style: italic; font-size: 0.9em;">Computed correlation used pearson-method with pairwise-deletion.</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <p><strong>Question 4:</strong> Compare significant correlations (column 1) with the previous table: What changed across the two samples?</p>
 <p><strong>Response:</strong> __________________________________________</p>
@@ -326,6 +867,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"color"</span>,   </span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"upper"</span>, <span class="at">diag =</span> <span class="cn">FALSE</span>,       </span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">tl.col =</span> <span class="st">"black"</span>, <span class="at">tl.srt =</span> <span class="dv">35</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W4_LAB_KEY_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 </div>
 <hr>
 </section>
@@ -340,6 +888,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggpairs</span>(</span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">alpha =</span> <span class="fl">0.1</span>),</span>
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">lower =</span> <span class="fu">list</span>(<span class="at">continuous =</span> <span class="st">"smooth"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W4_LAB_KEY_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 </div>
 <p><strong>Question:</strong> Do you think the NHANES survey data has any selection bias?</p>
 <p><strong>Response:</strong> __________________________________________</p>
