@@ -1,0 +1,715 @@
+---
+title: "Week 9 - Logistic Regression"
+subtitle: "PSY 150"
+author: "KEY"
+date: "`r Sys.Date()`"
+output: 
+    html_document
+---
+
+```{r setup, echo=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, eval=TRUE)
+```
+
+### Load packages
+
+```{r}
+
+library(tidyverse)
+library(here)
+library(janitor)
+library(report)
+library(jtools)
+library(sjPlot)
+
+source("load_plot_functions.R")
+
+```
+
+### Read in the Simulated data
+
+```{r}
+
+teachr_data <- read_csv(here("data", "teachers_anx_covid_sim.csv")) %>% 
+    mutate(across(c(occupation:occupation2), as.factor)) %>% 
+    mutate(occupation = factor(occupation,
+           levels = c("teachers","healthcare","office","other")))
+
+```
+
+------------------------------------------------------------------------
+
+Categorical outcome variable (`anxiety`): 
+
+0 = Low Anxiety (`none / some of the time`) 
+1 = High Anxiety (`most / all of the time`)
+
+Categorical predictor (`occupation2`; factor with 2 levels):
+
+0 = `all other occupations`
+1 = `teachers`
+
+------------------------------------------------------------------------
+
+Check the distribution of outcome variable & predictor variable:
+```{r}
+
+tabyl(teachr_data$anxiety)
+tabyl(teachr_data$occupation2)
+
+```
+
+Plot the categorical outcome & view response proportions for each category:
+```{r}
+
+bar_plot(
+  data = teachr_data,
+  x_var = anxiety,
+  x_label = "Anxiety Group (0 = Low Anxiety , 1 = High Anxiety) ",
+  title = "Distribution of Categorical Outcome Variable Anxiety "
+)
+
+```
+
+------------------------------------------------------------------------
+
+### Specifying a Logistic Regression model
+
+------------------------------------------------------------------------
+
+```{r}
+model0 <- glm(anxiety ~ occupation2, 
+         data = teachr_data, family = binomial())
+
+summ(model0,
+     exp = TRUE, # Change to `FALSE` for Logit Estimates
+     model.fit = FALSE, digits = 3)
+```
+
+### Why is the Odds Ratio labeled "exp(Est.)" 
+
+```{r}
+# To convert logistic regression coefficients estimated 
+# in the Log-Odds (Logits) to Odds Ratio (OR):
+
+# EQUATION: OR = e^(logit_beta)
+exp(0.318)
+
+```
+
+**Question:**  Why is the Odds Ratio labeled "exp(Est.)" 
+
+**Response:** __________________________________
+
+------------------------------------------------------------------------
+
+### How do we interpret the intercept?
+
+1. Convert the intercept (odds) to probability:
+
+**OR-to-Probability Equation:**  Probability = OR_intercept / (1 + OR_intercept)
+
+2. The intercept is then interpreted as the probability that *Y = 1* predicted by the model when *all predictors (Xs) are held at zero (or the reference group)*:
+
+```{r}
+# The intercept probability = 
+0.081/(1+0.081)
+
+```
+
+**Question:** What is the interpretation of intercept for this model:
+
+**Response:** __________________________________
+
+------------------------------------------------------------------------
+
+### How do we interpret the predictor?
+
+1. Convert the predictor (odds ratio) to *percent change*:
+
+**OR-to-Percent Equation:**  `Percent Change = (OR-1)*100`
+
+2. The predictor is then interpreted as the percent change in the odds of *Y = 1* predicted by the model when *the predictor X increases by 1 (or for the non-reference group relative to reference group)*:
+
+```{r}
+# Predictor (percent change in the odds) = 
+(1.375-1)*100
+
+```
+
+**Question:** What is the interpretation of predictor for this model:
+
+**Response:** __________________________________
+
+------------------------------------------------------------------------
+
+### Forward Stepwise Regression: 
+
+**Compare models after adding additional predictors:**
+
+1. Start with focal predictor only and estimate model (`Step 1 Model`)
+2. Estimate a new model(`Step 2 Model`) with the addition of a control variable
+3. Compare `Step 1 Model` model to `Step 2 Model`
+4. Add an additional control to the `Step 2 Model` and estimate `Step 3 Model`...
+5. Repeat (2-3): Add additional control variables to previously fitted model. 
+   Test all potentially relevant control variables.
+
+------------------------------------------------------------------------
+
+Is the predictor variable continuous or categorical?
+```{r}
+
+tabyl(teachr_data$occupation)
+
+```
+
+Categorical predictor (`occupation`; factor with 4 levels):
+
+0 = `teachers` 
+1 = `healthcare`
+2 = `office`
+3 = `other`
+
+Fit the step-1 model (focal predictor only): 
+```{r}
+
+mstep1 <- glm(anxiety ~ occupation,
+         data = teachr_data, family = binomial())
+
+summ(mstep1, exp = TRUE, model.fit = FALSE, digits = 3)
+
+```
+
+Fit the step-2 model (add control predictor `gender`): 
+```{r}
+
+mstep2 <- glm(anxiety ~ occupation + gender,
+         data = teachr_data, family = binomial())
+
+summ(mstep2, exp = TRUE, model.fit = FALSE, digits = 3)
+
+```
+
+Fit the step-3 model (add control predictor `age_band`): 
+```{r}
+
+mstep3 <- glm(anxiety ~ occupation + gender + age_band,
+         data = teachr_data, family = binomial())
+
+summ(mstep3, exp = TRUE, model.fit = FALSE, digits = 3)
+
+```
+
+
+------------------------------------------------------------------------
+
+### City College Persistence (Predicting dropout)
+
+> Data was simulated to approximately replicate findings from study:
+
+Nakajima et al. (2012): "Student Persistence in Community Colleges"
+
+------------------------------------------------------------------------
+
+Read in the simulated city college persistence data:
+```{r}
+
+cc_data <- read_csv(here("data", "city_college_persistence_sim.csv")) %>% 
+  mutate(across(c(gender, race, financial_aid), as.factor)) %>%
+  mutate(dropped_out = factor(dropped_out, labels = c("Enrolled","Dropped Out")) )
+  
+```
+
+Plot the categorical outcome & view response proportions for each category:
+```{r}
+
+bar_plot(
+  data = cc_data,
+  x_var = dropped_out,
+  x_label = "Student Drop Out Indicator",
+  title = "Distribution of Categorical Outcome Variable Student Drop Out"
+)
+
+```
+
+------------------------------------------------------------------------
+
+### Logistic Regression with a Continuous Predictor 
+
+```{r}
+
+mstep0_demo <- glm(dropped_out ~ faculty_interaction,
+                 data = cc_data, family = binomial())
+
+summ(mstep0_demo, exp = TRUE, model.fit = FALSE, model.info = FALSE, digits = 3)
+```
+
+In logistic regression, the change in odds is `multiplicative`, `not additive`:
+
+Equation (Take the OR estimate to the power of X): `OR_BETA^(X)` 
+
+How much does the model predict the odds of `dropping out` changes when `faculty_interaction` changes from `1 to 3`?
+
+Calculate predictor as percent change when `faculty_interaction = 1`: 
+
+**Response:** _______16.9% lower odds of dropping out ________
+
+Calculate predictor as percent change when `faculty_interaction = 3`: 
+
+**Response:** _________42.6% lower odds of dropping out_____
+
+
+------------------------------------------------------------------------
+
+### GROUP 1: Estimate the regression of the outcome predicted by focal predictor
+
+**Instructions:**
+
+1. Estimate the following logistic regression model:
+
+*dropped_out = ⍺ + β(offcampus_work_hours)*
+
+2. Convert the intercept from Odds-Ratio (OR) to probability and interpret:
+
+**OR-to-Probability Equation:**  Probability = OR_intercept / (1 + OR_intercept)
+
+3. Interpret the Odds Ratio of the predictor `offcampus_work_hours` as percent change
+
+**OR-to-Percent-Change Equation:** Percent Change = (1 - OR)*100
+
+4. Is the predictor estimate for `offcampus_work_hours` significant? 
+
+------------------------------------------------------------------------
+
+
+```{r}
+
+mstep1_persist <- glm(dropped_out ~ offcampus_work_hours,
+                 data = cc_data, family = binomial())
+
+summ(mstep1_persist, exp = TRUE, model.fit = FALSE, model.info = FALSE, digits = 3)
+```
+
+Interpretation of intercept (probability): 
+
+**Response:** _______________________
+
+Interpretation of focal predictor `offcampus_work_hours`: 
+
+**Response:** _______________________
+
+Significance of predictor estimate: 
+
+**Response:** _______________________
+
+
+------------------------------------------------------------------------
+
+### GROUP 2: Add the control variable `cumulative_gpa` to the model
+
+**Instructions:**
+
+1. Estimate the following logistic regression model:
+
+*dropped_out = ⍺ + β1(offcampus_work_hours) + β2(cumulative_gpa)*
+
+2. Interpret the Odds Ratio of the predictor `cumulative_gpa` as percent change
+
+**OR-to-Percent-Change Equation:** Percent Change = (1 - OR)*100
+
+3. Is the predictor estimate for `cumulative_gpa` significant? 
+
+4. How did the addition of the control variable to the model affect the focal predictor est/sig? 
+
+------------------------------------------------------------------------
+
+```{r}
+mstep2_persist <- glm(dropped_out ~ 
+                   offcampus_work_hours +
+                   cumulative_gpa,
+                 data = cc_data, family = binomial())
+
+summ(mstep2_persist, exp = TRUE, model.fit = FALSE, model.info = FALSE, digits = 3)
+
+```
+
+Interpretation of control predictor `cumulative_gpa`: 
+
+**Response:** _______________________
+
+Significance of predictor estimate: 
+
+**Response:** _______________________
+
+How did the addition of the control variable to the model affect the focal predictor est/sig? 
+
+**Response:** _______________________
+
+------------------------------------------------------------------------
+
+### GROUP 3: Add the control variable `enrollment_units` to the model
+
+**Instructions:**
+
+1. Estimate the following logistic regression model:
+
+*dropped_out = ⍺ + β1(offcampus_work_hours) + β2(cumulative_gpa) + β3(enrollment_units)*
+
+2. Interpret the Odds Ratio of the predictor `enrollment_units` as percent change
+
+**OR-to-Percent-Change Equation:** Percent Change = (1 - OR)*100
+
+3. Is the predictor estimate for `enrollment_units` significant? 
+
+4. How did the addition of the control variable to the model affect the focal predictor est/sig? 
+
+------------------------------------------------------------------------
+
+```{r}
+mstep3_persist <- glm(dropped_out ~ 
+                   offcampus_work_hours +
+                   cumulative_gpa +
+                   enrollment_units,
+                 data = cc_data, family = binomial())
+
+summ(mstep3_persist, exp = TRUE, model.fit = FALSE, model.info = FALSE, digits = 3)
+
+```
+
+Interpretation of control predictor `enrollment_units`: 
+
+**Response:** _______________________
+
+Significance of predictor estimate: 
+
+**Response:** _______________________
+
+How did the addition of the control variable to the model affect the focal predictor est/sig? 
+
+**Response:** _______________________
+
+
+------------------------------------------------------------------------
+
+### GROUP 4: Add the control variable `financial_aid` to the model
+
+**Instructions:**
+
+1. Estimate the following logistic regression model:
+
+*dropped_out = ⍺ + β1(offcampus_work_hours) + β2(cumulative_gpa) + β3(enrollment_units) + β4(financial_aid)*
+
+2. Interpret the Odds Ratio of the predictor `financial_aid` as percent change
+
+**OR-to-Percent-Change Equation:** Percent Change = (1 - OR)*100
+
+3. Is the predictor estimate for `financial_aid` significant? 
+
+4. How did the addition of the control variable to the model affect the focal predictor est/sig? 
+
+------------------------------------------------------------------------
+
+```{r}
+mstep4_persist <- glm(dropped_out ~ 
+                   offcampus_work_hours +
+                   cumulative_gpa +
+                   enrollment_units +
+                   financial_aid,
+                 data = cc_data, family = binomial())
+
+summ(mstep4_persist, exp = TRUE, model.fit = FALSE, model.info = FALSE, digits = 3)
+
+```
+
+Interpretation of control predictor `financial_aid`: 
+
+**Response:** _______________________
+
+Significance of predictor estimate: 
+
+**Response:** _______________________
+
+How did the addition of the control variable to the model affect the focal predictor est/sig? 
+
+**Response:** _______________________
+
+
+------------------------------------------------------------------------
+
+### Do Adverse Childhood Experiences (ACEs) increase likelihood of commiting a violent crime?
+
+> Data was simulated to approximately replicate findings from study:
+
+**Kazeem et al., 2020**: Study Population (Nigeria): Incarcerated (N=253), Non-incarcerated (N=253)
+
+------------------------------------------------------------------------
+
+Read in the simulated data & specify factors (& factor levels) of categorical variables: 
+```{r}
+
+ace_data <- read_csv(here("data", "ACEs_violent_crime_SIM.csv")) |>
+  mutate(
+    group = factor(group, levels = c("non_incarcerated","incarcerated")),
+    sex = factor(sex),
+    education_level = factor(education_level,
+      levels = c("no_school","<primary","primary","secondary","college","postgrad"))) %>%
+  mutate(violent_crime = factor(violent_crime, labels = c("No", "Yes"))) %>% 
+  select(violent_crime, ace_family_env, ace_peer_violence, ace_community_violence,
+         ace_war_exposure, ses_low, age, education_level, sex, ethnicity)
+
+```
+
+Plot the categorical outcome & view response proportions for each category:
+```{r}
+
+bar_plot(
+  data = ace_data,
+  x_var = violent_crime,
+  x_label = "Participant Committed a Violent Crime",
+  title = "Categorical Outcome Variable Violent Crime") + 
+  labs(subtitle = "Sample Population (Nigeria): Incarcerated (N=253), Non-incarcerated (N=253)")
+
+```
+
+------------------------------------------------------------------------
+
+### GROUP 5: Estimate the regression of the outcome predicted by focal predictor
+
+**Instructions:**
+
+1. Estimate the following logistic regression model:
+
+*violent_crime = ⍺ + β1(ace_family_env)*
+
+2. Convert the intercept from Odds-Ratio (OR) to probability and interpret:
+
+**OR-to-Probability Equation:**  Probability = OR_intercept / (1 + OR_intercept)
+
+3. Interpret the Odds Ratio of the predictor `ace_family_env` as percent change
+
+**OR-to-Percent-Change Equation:** Percent Change = (1 - OR)*100
+
+4. Is the predictor estimate for `ace_family_env` significant? 
+
+------------------------------------------------------------------------
+
+```{r}
+mstep1_aces <- glm(
+  violent_crime ~ ace_family_env,
+  data = ace_data,
+  family = binomial())
+
+summ(mstep1_aces, exp = TRUE, model.fit = FALSE, model.info = FALSE, digits = 3)
+
+```
+
+Interpretation of intercept (probability): 
+
+**Response:** _______________________
+
+Interpretation of focal predictor: 
+
+**Response:** _______________________
+
+Significance of predictor estimate: 
+
+**Response:** _______________________
+
+
+------------------------------------------------------------------------
+
+### GROUP 6: Add the control variable `ace_peer_violence` to the model
+
+**Instructions:**
+
+1. Estimate the following logistic regression model:
+
+*violent_crime = ⍺ + β1(ace_family_env) + β2(ace_peer_violence)*
+
+2. Interpret the Odds Ratio of the predictor `ace_peer_violence` as percent change
+
+**OR-to-Percent-Change Equation:** Percent Change = (1 - OR)*100
+
+3. Is the predictor estimate for `ace_peer_violence` significant? 
+
+4. How did the addition of the control variable to the model affect the focal predictor est/sig? 
+
+------------------------------------------------------------------------
+
+```{r}
+mstep2_aces <- glm(
+  violent_crime ~ ace_family_env + ace_peer_violence,
+  data = ace_data,
+  family = binomial())
+
+summ(mstep2_aces, exp = TRUE, model.fit = FALSE, model.info = FALSE, digits = 3)
+
+```
+
+Interpretation of control predictor: 
+
+**Response:** _______________________
+
+Significance of predictor estimate: 
+
+**Response:** _______________________
+
+How did the addition of the control variable to the model affect the focal predictor est/sig? 
+
+**Response:** _______________________
+
+------------------------------------------------------------------------
+
+### GROUP 7: Add the control variable `ace_community_violence` to the model
+
+**Instructions:**
+
+1. Estimate the following logistic regression model:
+
+*violent_crime = ⍺ + β1(ace_family_env) + β2(ace_peer_violence) + β3(ace_community_violence)*
+
+2. Interpret the Odds Ratio of the predictor `ace_community_violence` as percent change
+
+**OR-to-Percent-Change Equation:** Percent Change = (1 - OR)*100
+
+3. Is the predictor estimate for `ace_community_violence` significant? 
+
+------------------------------------------------------------------------
+
+```{r}
+mstep3_aces <- glm(
+  violent_crime ~ 
+    ace_family_env + ace_peer_violence + ace_community_violence,
+  data = ace_data,
+  family = binomial())
+
+summ(mstep3_aces, exp = TRUE, model.fit = FALSE, model.info = FALSE, digits = 3)
+
+```
+
+Interpretation of control predictor: 
+
+**Response:** _______________________
+
+Significance of predictor estimate: 
+
+**Response:** _______________________
+
+------------------------------------------------------------------------
+
+### GROUP 8: Add the control variable `ace_war_exposure` to the model
+
+**Instructions:**
+
+1. Estimate the following logistic regression model:
+
+*violent_crime = ⍺ + β1(ace_family_env) + β2(ace_peer_violence) + β3(ace_community_violence) + β4(ace_war_exposure)*
+
+2. Interpret the Odds Ratio of the predictor `ace_war_exposure` as percent change
+
+**OR-to-Percent-Change Equation:** Percent Change = (1 - OR)*100
+
+3. Is the predictor estimate for `ace_war_exposure` significant? 
+
+------------------------------------------------------------------------
+
+```{r}
+mstep4_aces <- glm(
+  violent_crime ~ 
+  ace_family_env + ace_peer_violence + ace_community_violence + ace_war_exposure,
+  data = ace_data,
+  family = binomial())
+
+summ(mstep4_aces, exp = TRUE, model.fit = FALSE, model.info = FALSE, digits = 3)
+
+```
+
+Interpretation of control predictor: 
+
+**Response:** _______________________
+
+Significance of predictor estimate: 
+
+**Response:** _______________________
+
+------------------------------------------------------------------------
+
+### GROUP 9: Add the control variable `ses_low` to the model
+
+**Instructions:**
+
+1. Estimate the following logistic regression model:
+
+*violent_crime = ⍺ + β1(ace_family_env) + β2(ace_peer_violence) + β3(ace_community_violence) + β4(ace_war_exposure) + β5(ses_low)*
+
+2. Interpret the Odds Ratio of the predictor `ses_low` as percent change
+
+**OR-to-Percent-Change Equation:** Percent Change = (1 - OR)*100
+
+3. Is the predictor estimate for `ses_low` significant? 
+
+------------------------------------------------------------------------
+
+```{r}
+mstep5_aces <- glm(
+  violent_crime ~ 
+    ace_family_env + ace_peer_violence + ace_community_violence + ace_war_exposure +
+    ses_low,
+  data = ace_data,
+  family = binomial())
+
+summ(mstep5_aces, exp = TRUE, model.fit = FALSE, model.info = FALSE, digits = 3)
+
+```
+
+Interpretation of control predictor: 
+
+**Response:** _______________________
+
+Significance of predictor estimate: 
+
+**Response:** _______________________
+
+------------------------------------------------------------------------
+
+### GROUP 10: Add the control variable `sex` to the model
+
+**Instructions:**
+
+1. Estimate the following logistic regression model:
+
+*violent_crime = ⍺ + β1(ace_family_env) + β2(ace_peer_violence) + β3(ace_community_violence) + β4(ace_war_exposure) + β5(ses_low) + β6(sex)* 
+
+2. Interpret the Odds Ratio of the predictor `sex` as percent change
+
+**OR-to-Percent-Change Equation:** Percent Change = (1 - OR)*100
+
+3. Is the predictor estimate for `sex` significant? 
+
+------------------------------------------------------------------------
+
+```{r}
+mstep6_aces <- glm(
+  violent_crime ~ 
+    ace_family_env + ace_peer_violence + ace_community_violence + ace_war_exposure +
+    ses_low + 
+    sex,
+  data = ace_data,
+  family = binomial())
+
+summ(mstep6_aces, exp = TRUE, model.fit = FALSE, model.info = FALSE, digits = 3)
+
+```
+
+Interpretation of control predictor: 
+
+**Response:** _______________________
+
+Significance of predictor estimate: 
+
+**Response:** _______________________
+
+
+------------------------------------------------------------------------
+
+------------------------------------------------------------------------
