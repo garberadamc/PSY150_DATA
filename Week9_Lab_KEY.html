@@ -1,0 +1,2747 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="KEY">
+<meta name="dcterms.date" content="2026-05-07">
+
+<title>Week 9 - Logistic Regression</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="Week9_Lab_KEY_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Week9_Lab_KEY_files/libs/quarto-html/quarto.js"></script>
+<script src="Week9_Lab_KEY_files/libs/quarto-html/popper.min.js"></script>
+<script src="Week9_Lab_KEY_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Week9_Lab_KEY_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Week9_Lab_KEY_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Week9_Lab_KEY_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Week9_Lab_KEY_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Week9_Lab_KEY_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Week9_Lab_KEY_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Week 9 - Logistic Regression</h1>
+<p class="subtitle lead">PSY 150</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>KEY </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 7, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="load-packages" class="level3">
+<h3 class="anchored" data-anchor-id="load-packages">Load packages</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(report)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(jtools)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sjPlot)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"load_plot_functions.R"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="read-in-the-simulated-data" class="level3">
+<h3 class="anchored" data-anchor-id="read-in-the-simulated-data">Read in the Simulated data</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>teachr_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"teachers_anx_covid_sim.csv"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(occupation<span class="sc">:</span>occupation2), as.factor)) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">occupation =</span> <span class="fu">factor</span>(occupation,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"teachers"</span>,<span class="st">"healthcare"</span>,<span class="st">"office"</span>,<span class="st">"other"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<hr>
+<p>Categorical outcome variable (<code>anxiety</code>):</p>
+<p>0 = Low Anxiety (<code>none / some of the time</code>) 1 = High Anxiety (<code>most / all of the time</code>)</p>
+<p>Categorical predictor (<code>occupation2</code>; factor with 2 levels):</p>
+<p>0 = <code>all other occupations</code> 1 = <code>teachers</code></p>
+<hr>
+<p>Check the distribution of outcome variable &amp; predictor variable:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(teachr_data<span class="sc">$</span>anxiety)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> teachr_data$anxiety     n   percent
+                   0 44091 0.9185625
+                   1  3909 0.0814375</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(teachr_data<span class="sc">$</span>occupation2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> teachr_data$occupation2     n percent
+              all_others 36000    0.75
+                teachers 12000    0.25</code></pre>
+</div>
+</div>
+<p>Plot the categorical outcome &amp; view response proportions for each category:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bar_plot</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> teachr_data,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x_var =</span> anxiety,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x_label =</span> <span class="st">"Anxiety Group (0 = Low Anxiety , 1 = High Anxiety) "</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"Distribution of Categorical Outcome Variable Anxiety "</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Week9_Lab_KEY_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="specifying-a-logistic-regression-model" class="level3">
+<h3 class="anchored" data-anchor-id="specifying-a-logistic-regression-model">Specifying a Logistic Regression model</h3>
+<hr>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>model0 <span class="ot">&lt;-</span> <span class="fu">glm</span>(anxiety <span class="sc">~</span> occupation2, </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">data =</span> teachr_data, <span class="at">family =</span> <span class="fu">binomial</span>())</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summ</span>(model0,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">exp =</span> <span class="cn">TRUE</span>, <span class="co"># Change to `FALSE` for Logit Estimates</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">model.fit =</span> <span class="cn">FALSE</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<tbody>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">Observations</td>
+<td style="text-align: right;">48000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">Dependent variable</td>
+<td style="text-align: right;">anxiety</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">Type</td>
+<td style="text-align: right;">Generalized linear model</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">Family</td>
+<td style="text-align: right;">binomial</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">Link</td>
+<td style="text-align: right;">logit</td>
+</tr>
+</tbody>
+</table>
+</div>
+  
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">exp(Est.)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2.5%</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">97.5%</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">z val.</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">(Intercept)</td>
+<td style="text-align: right;">0.081</td>
+<td style="text-align: right;">0.078</td>
+<td style="text-align: right;">0.084</td>
+<td style="text-align: right;">-125.558</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">occupation2teachers</td>
+<td style="text-align: right;">1.375</td>
+<td style="text-align: right;">1.280</td>
+<td style="text-align: right;">1.476</td>
+<td style="text-align: right;">8.748</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+</tbody><tfoot>
+<tr class="odd">
+<td style="text-align: left; padding: 0;"><sup></sup> Standard errors: MLE</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+</tfoot>
+
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="why-is-the-odds-ratio-labeled-expest." class="level3">
+<h3 class="anchored" data-anchor-id="why-is-the-odds-ratio-labeled-expest.">Why is the Odds Ratio labeled “exp(Est.)”</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># To convert logistic regression coefficients estimated </span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># in the Log-Odds (Logits) to Odds Ratio (OR):</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># EQUATION: OR = e^(logit_beta)</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fl">0.318</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.374376</code></pre>
+</div>
+</div>
+<p><strong>Question:</strong> Why is the Odds Ratio labeled “exp(Est.)”</p>
+<p><strong>Response:</strong> __________________________________</p>
+<hr>
+</section>
+<section id="how-do-we-interpret-the-intercept" class="level3">
+<h3 class="anchored" data-anchor-id="how-do-we-interpret-the-intercept">How do we interpret the intercept?</h3>
+<ol type="1">
+<li>Convert the intercept (odds) to probability:</li>
+</ol>
+<p><strong>OR-to-Probability Equation:</strong> Probability = OR_intercept / (1 + OR_intercept)</p>
+<ol start="2" type="1">
+<li>The intercept is then interpreted as the probability that <em>Y = 1</em> predicted by the model when <em>all predictors (Xs) are held at zero (or the reference group)</em>:</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The intercept probability = </span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fl">0.081</span><span class="sc">/</span>(<span class="dv">1</span><span class="fl">+0.081</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.07493062</code></pre>
+</div>
+</div>
+<p><strong>Question:</strong> What is the interpretation of intercept for this model:</p>
+<p><strong>Response:</strong> __________________________________</p>
+<hr>
+</section>
+<section id="how-do-we-interpret-the-predictor" class="level3">
+<h3 class="anchored" data-anchor-id="how-do-we-interpret-the-predictor">How do we interpret the predictor?</h3>
+<ol type="1">
+<li>Convert the predictor (odds ratio) to <em>percent change</em>:</li>
+</ol>
+<p><strong>OR-to-Percent Equation:</strong> <code>Percent Change = (OR-1)*100</code></p>
+<ol start="2" type="1">
+<li>The predictor is then interpreted as the percent change in the odds of <em>Y = 1</em> predicted by the model when <em>the predictor X increases by 1 (or for the non-reference group relative to reference group)</em>:</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Predictor (percent change in the odds) = </span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>(<span class="fl">1.375</span><span class="dv">-1</span>)<span class="sc">*</span><span class="dv">100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 37.5</code></pre>
+</div>
+</div>
+<p><strong>Question:</strong> What is the interpretation of predictor for this model:</p>
+<p><strong>Response:</strong> __________________________________</p>
+<hr>
+</section>
+<section id="forward-stepwise-regression" class="level3">
+<h3 class="anchored" data-anchor-id="forward-stepwise-regression">Forward Stepwise Regression:</h3>
+<p><strong>Compare models after adding additional predictors:</strong></p>
+<ol type="1">
+<li>Start with focal predictor only and estimate model (<code>Step 1 Model</code>)</li>
+<li>Estimate a new model(<code>Step 2 Model</code>) with the addition of a control variable</li>
+<li>Compare <code>Step 1 Model</code> model to <code>Step 2 Model</code></li>
+<li>Add an additional control to the <code>Step 2 Model</code> and estimate <code>Step 3 Model</code>…</li>
+<li>Repeat (2-3): Add additional control variables to previously fitted model. Test all potentially relevant control variables.</li>
+</ol>
+<hr>
+<p>Is the predictor variable continuous or categorical?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(teachr_data<span class="sc">$</span>occupation)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> teachr_data$occupation     n percent
+               teachers 12000    0.25
+             healthcare 12000    0.25
+                 office 12000    0.25
+                  other 12000    0.25</code></pre>
+</div>
+</div>
+<p>Categorical predictor (<code>occupation</code>; factor with 4 levels):</p>
+<p>0 = <code>teachers</code> 1 = <code>healthcare</code> 2 = <code>office</code> 3 = <code>other</code></p>
+<p>Fit the step-1 model (focal predictor only):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>mstep1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(anxiety <span class="sc">~</span> occupation,</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">data =</span> teachr_data, <span class="at">family =</span> <span class="fu">binomial</span>())</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summ</span>(mstep1, <span class="at">exp =</span> <span class="cn">TRUE</span>, <span class="at">model.fit =</span> <span class="cn">FALSE</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<tbody>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">Observations</td>
+<td style="text-align: right;">48000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">Dependent variable</td>
+<td style="text-align: right;">anxiety</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">Type</td>
+<td style="text-align: right;">Generalized linear model</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">Family</td>
+<td style="text-align: right;">binomial</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">Link</td>
+<td style="text-align: right;">logit</td>
+</tr>
+</tbody>
+</table>
+</div>
+  
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">exp(Est.)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2.5%</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">97.5%</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">z val.</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">(Intercept)</td>
+<td style="text-align: right;">0.112</td>
+<td style="text-align: right;">0.105</td>
+<td style="text-align: right;">0.118</td>
+<td style="text-align: right;">-72.190</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">occupationhealthcare</td>
+<td style="text-align: right;">0.693</td>
+<td style="text-align: right;">0.633</td>
+<td style="text-align: right;">0.760</td>
+<td style="text-align: right;">-7.858</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">occupationoffice</td>
+<td style="text-align: right;">0.757</td>
+<td style="text-align: right;">0.692</td>
+<td style="text-align: right;">0.828</td>
+<td style="text-align: right;">-6.101</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">occupationother</td>
+<td style="text-align: right;">0.732</td>
+<td style="text-align: right;">0.669</td>
+<td style="text-align: right;">0.802</td>
+<td style="text-align: right;">-6.769</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+</tbody><tfoot>
+<tr class="odd">
+<td style="text-align: left; padding: 0;"><sup></sup> Standard errors: MLE</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+</tfoot>
+
+</table>
+</div>
+</div>
+</div>
+<p>Fit the step-2 model (add control predictor <code>gender</code>):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>mstep2 <span class="ot">&lt;-</span> <span class="fu">glm</span>(anxiety <span class="sc">~</span> occupation <span class="sc">+</span> gender,</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">data =</span> teachr_data, <span class="at">family =</span> <span class="fu">binomial</span>())</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summ</span>(mstep2, <span class="at">exp =</span> <span class="cn">TRUE</span>, <span class="at">model.fit =</span> <span class="cn">FALSE</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<tbody>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">Observations</td>
+<td style="text-align: right;">48000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">Dependent variable</td>
+<td style="text-align: right;">anxiety</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">Type</td>
+<td style="text-align: right;">Generalized linear model</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">Family</td>
+<td style="text-align: right;">binomial</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">Link</td>
+<td style="text-align: right;">logit</td>
+</tr>
+</tbody>
+</table>
+</div>
+  
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">exp(Est.)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2.5%</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">97.5%</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">z val.</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">(Intercept)</td>
+<td style="text-align: right;">0.119</td>
+<td style="text-align: right;">0.112</td>
+<td style="text-align: right;">0.127</td>
+<td style="text-align: right;">-65.657</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">occupationhealthcare</td>
+<td style="text-align: right;">0.692</td>
+<td style="text-align: right;">0.631</td>
+<td style="text-align: right;">0.758</td>
+<td style="text-align: right;">-7.905</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">occupationoffice</td>
+<td style="text-align: right;">0.758</td>
+<td style="text-align: right;">0.693</td>
+<td style="text-align: right;">0.829</td>
+<td style="text-align: right;">-6.068</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">occupationother</td>
+<td style="text-align: right;">0.733</td>
+<td style="text-align: right;">0.670</td>
+<td style="text-align: right;">0.802</td>
+<td style="text-align: right;">-6.751</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">gendermale</td>
+<td style="text-align: right;">0.823</td>
+<td style="text-align: right;">0.767</td>
+<td style="text-align: right;">0.883</td>
+<td style="text-align: right;">-5.407</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+</tbody><tfoot>
+<tr class="even">
+<td style="text-align: left; padding: 0;"><sup></sup> Standard errors: MLE</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+</tfoot>
+
+</table>
+</div>
+</div>
+</div>
+<p>Fit the step-3 model (add control predictor <code>age_band</code>):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>mstep3 <span class="ot">&lt;-</span> <span class="fu">glm</span>(anxiety <span class="sc">~</span> occupation <span class="sc">+</span> gender <span class="sc">+</span> age_band,</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">data =</span> teachr_data, <span class="at">family =</span> <span class="fu">binomial</span>())</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summ</span>(mstep3, <span class="at">exp =</span> <span class="cn">TRUE</span>, <span class="at">model.fit =</span> <span class="cn">FALSE</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<tbody>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">Observations</td>
+<td style="text-align: right;">48000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">Dependent variable</td>
+<td style="text-align: right;">anxiety</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">Type</td>
+<td style="text-align: right;">Generalized linear model</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">Family</td>
+<td style="text-align: right;">binomial</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">Link</td>
+<td style="text-align: right;">logit</td>
+</tr>
+</tbody>
+</table>
+</div>
+  
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">exp(Est.)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2.5%</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">97.5%</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">z val.</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">(Intercept)</td>
+<td style="text-align: right;">0.172</td>
+<td style="text-align: right;">0.150</td>
+<td style="text-align: right;">0.197</td>
+<td style="text-align: right;">-24.998</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">occupationhealthcare</td>
+<td style="text-align: right;">0.693</td>
+<td style="text-align: right;">0.632</td>
+<td style="text-align: right;">0.760</td>
+<td style="text-align: right;">-7.841</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">occupationoffice</td>
+<td style="text-align: right;">0.760</td>
+<td style="text-align: right;">0.695</td>
+<td style="text-align: right;">0.831</td>
+<td style="text-align: right;">-5.994</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">occupationother</td>
+<td style="text-align: right;">0.736</td>
+<td style="text-align: right;">0.672</td>
+<td style="text-align: right;">0.805</td>
+<td style="text-align: right;">-6.651</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">gendermale</td>
+<td style="text-align: right;">0.824</td>
+<td style="text-align: right;">0.768</td>
+<td style="text-align: right;">0.884</td>
+<td style="text-align: right;">-5.358</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">age_band25-34</td>
+<td style="text-align: right;">0.928</td>
+<td style="text-align: right;">0.803</td>
+<td style="text-align: right;">1.071</td>
+<td style="text-align: right;">-1.026</td>
+<td style="text-align: right;">0.305</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">age_band35-44</td>
+<td style="text-align: right;">0.818</td>
+<td style="text-align: right;">0.711</td>
+<td style="text-align: right;">0.942</td>
+<td style="text-align: right;">-2.788</td>
+<td style="text-align: right;">0.005</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">age_band45-54</td>
+<td style="text-align: right;">0.619</td>
+<td style="text-align: right;">0.536</td>
+<td style="text-align: right;">0.715</td>
+<td style="text-align: right;">-6.502</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold;">age_band55-64</td>
+<td style="text-align: right;">0.523</td>
+<td style="text-align: right;">0.449</td>
+<td style="text-align: right;">0.608</td>
+<td style="text-align: right;">-8.420</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold;">age_band65+</td>
+<td style="text-align: right;">0.319</td>
+<td style="text-align: right;">0.261</td>
+<td style="text-align: right;">0.389</td>
+<td style="text-align: right;">-11.242</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+</tbody><tfoot>
+<tr class="odd">
+<td style="text-align: left; padding: 0;"><sup></sup> Standard errors: MLE</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+</tfoot>
+
+</table>
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="city-college-persistence-predicting-dropout" class="level3">
+<h3 class="anchored" data-anchor-id="city-college-persistence-predicting-dropout">City College Persistence (Predicting dropout)</h3>
+<blockquote class="blockquote">
+<p>Data was simulated to approximately replicate findings from study:</p>
+</blockquote>
+<p>Nakajima et al.&nbsp;(2012): “Student Persistence in Community Colleges”</p>
+<hr>
+<p>Read in the simulated city college persistence data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>cc_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"city_college_persistence_sim.csv"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(gender, race, financial_aid), as.factor)) <span class="sc">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dropped_out =</span> <span class="fu">factor</span>(dropped_out, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Enrolled"</span>,<span class="st">"Dropped Out"</span>)) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Plot the categorical outcome &amp; view response proportions for each category:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bar_plot</span>(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> cc_data,</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x_var =</span> dropped_out,</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x_label =</span> <span class="st">"Student Drop Out Indicator"</span>,</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"Distribution of Categorical Outcome Variable Student Drop Out"</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Week9_Lab_KEY_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="logistic-regression-with-a-continuous-predictor" class="level3">
+<h3 class="anchored" data-anchor-id="logistic-regression-with-a-continuous-predictor">Logistic Regression with a Continuous Predictor</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>mstep0_demo <span class="ot">&lt;-</span> <span class="fu">glm</span>(dropped_out <span class="sc">~</span> faculty_interaction,</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> cc_data, <span class="at">family =</span> <span class="fu">binomial</span>())</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summ</span>(mstep0_demo, <span class="at">exp =</span> <span class="cn">TRUE</span>, <span class="at">model.fit =</span> <span class="cn">FALSE</span>, <span class="at">model.info =</span> <span class="cn">FALSE</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+exp(Est.)
+</th>
+<th style="text-align:right;">
+2.5%
+</th>
+<th style="text-align:right;">
+97.5%
+</th>
+<th style="text-align:right;">
+z val.
+</th>
+<th style="text-align:right;">
+p
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+0.428
+</td>
+<td style="text-align:right;">
+0.171
+</td>
+<td style="text-align:right;">
+1.072
+</td>
+<td style="text-align:right;">
+-1.812
+</td>
+<td style="text-align:right;">
+0.070
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+faculty_interaction
+</td>
+<td style="text-align:right;">
+0.831
+</td>
+<td style="text-align:right;">
+0.631
+</td>
+<td style="text-align:right;">
+1.094
+</td>
+<td style="text-align:right;">
+-1.322
+</td>
+<td style="text-align:right;">
+0.186
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<sup></sup> Standard errors: MLE
+</td>
+</tr>
+</tfoot>
+</table>
+</div>
+</div>
+<p>In logistic regression, the change in odds is <code>multiplicative</code>, <code>not additive</code>:</p>
+<p>Equation (Take the OR estimate to the power of X): <code>OR_BETA^(X)</code></p>
+<p>How much does the model predict the odds of <code>dropping out</code> changes when <code>faculty_interaction</code> changes from <code>1 to 3</code>?</p>
+<p>Calculate predictor as percent change when <code>faculty_interaction = 1</code>:</p>
+<p><strong>Response:</strong> _______16.9% lower odds of dropping out ________</p>
+<p>Calculate predictor as percent change when <code>faculty_interaction = 3</code>:</p>
+<p><strong>Response:</strong> _________42.6% lower odds of dropping out_____</p>
+<hr>
+</section>
+<section id="group-1-estimate-the-regression-of-the-outcome-predicted-by-focal-predictor" class="level3">
+<h3 class="anchored" data-anchor-id="group-1-estimate-the-regression-of-the-outcome-predicted-by-focal-predictor">GROUP 1: Estimate the regression of the outcome predicted by focal predictor</h3>
+<p><strong>Instructions:</strong></p>
+<ol type="1">
+<li>Estimate the following logistic regression model:</li>
+</ol>
+<p><em>dropped_out = ⍺ + β(offcampus_work_hours)</em></p>
+<ol start="2" type="1">
+<li>Convert the intercept from Odds-Ratio (OR) to probability and interpret:</li>
+</ol>
+<p><strong>OR-to-Probability Equation:</strong> Probability = OR_intercept / (1 + OR_intercept)</p>
+<ol start="3" type="1">
+<li>Interpret the Odds Ratio of the predictor <code>offcampus_work_hours</code> as percent change</li>
+</ol>
+<p><strong>OR-to-Percent-Change Equation:</strong> Percent Change = (1 - OR)*100</p>
+<ol start="4" type="1">
+<li>Is the predictor estimate for <code>offcampus_work_hours</code> significant?</li>
+</ol>
+<hr>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>mstep1_persist <span class="ot">&lt;-</span> <span class="fu">glm</span>(dropped_out <span class="sc">~</span> offcampus_work_hours,</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> cc_data, <span class="at">family =</span> <span class="fu">binomial</span>())</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summ</span>(mstep1_persist, <span class="at">exp =</span> <span class="cn">TRUE</span>, <span class="at">model.fit =</span> <span class="cn">FALSE</span>, <span class="at">model.info =</span> <span class="cn">FALSE</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+exp(Est.)
+</th>
+<th style="text-align:right;">
+2.5%
+</th>
+<th style="text-align:right;">
+97.5%
+</th>
+<th style="text-align:right;">
+z val.
+</th>
+<th style="text-align:right;">
+p
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+0.120
+</td>
+<td style="text-align:right;">
+0.074
+</td>
+<td style="text-align:right;">
+0.196
+</td>
+<td style="text-align:right;">
+-8.555
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+offcampus_work_hours
+</td>
+<td style="text-align:right;">
+1.027
+</td>
+<td style="text-align:right;">
+1.011
+</td>
+<td style="text-align:right;">
+1.044
+</td>
+<td style="text-align:right;">
+3.357
+</td>
+<td style="text-align:right;">
+0.001
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<sup></sup> Standard errors: MLE
+</td>
+</tr>
+</tfoot>
+</table>
+</div>
+</div>
+<p>Interpretation of intercept (probability):</p>
+<p><strong>Response:</strong> _______________________</p>
+<p>Interpretation of focal predictor <code>offcampus_work_hours</code>:</p>
+<p><strong>Response:</strong> _______________________</p>
+<p>Significance of predictor estimate:</p>
+<p><strong>Response:</strong> _______________________</p>
+<hr>
+</section>
+<section id="group-2-add-the-control-variable-cumulative_gpa-to-the-model" class="level3">
+<h3 class="anchored" data-anchor-id="group-2-add-the-control-variable-cumulative_gpa-to-the-model">GROUP 2: Add the control variable <code>cumulative_gpa</code> to the model</h3>
+<p><strong>Instructions:</strong></p>
+<ol type="1">
+<li>Estimate the following logistic regression model:</li>
+</ol>
+<p><em>dropped_out = ⍺ + β1(offcampus_work_hours) + β2(cumulative_gpa)</em></p>
+<ol start="2" type="1">
+<li>Interpret the Odds Ratio of the predictor <code>cumulative_gpa</code> as percent change</li>
+</ol>
+<p><strong>OR-to-Percent-Change Equation:</strong> Percent Change = (1 - OR)*100</p>
+<ol start="3" type="1">
+<li><p>Is the predictor estimate for <code>cumulative_gpa</code> significant?</p></li>
+<li><p>How did the addition of the control variable to the model affect the focal predictor est/sig?</p></li>
+</ol>
+<hr>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>mstep2_persist <span class="ot">&lt;-</span> <span class="fu">glm</span>(dropped_out <span class="sc">~</span> </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>                   offcampus_work_hours <span class="sc">+</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>                   cumulative_gpa,</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> cc_data, <span class="at">family =</span> <span class="fu">binomial</span>())</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summ</span>(mstep2_persist, <span class="at">exp =</span> <span class="cn">TRUE</span>, <span class="at">model.fit =</span> <span class="cn">FALSE</span>, <span class="at">model.info =</span> <span class="cn">FALSE</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+exp(Est.)
+</th>
+<th style="text-align:right;">
+2.5%
+</th>
+<th style="text-align:right;">
+97.5%
+</th>
+<th style="text-align:right;">
+z val.
+</th>
+<th style="text-align:right;">
+p
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+14.808
+</td>
+<td style="text-align:right;">
+4.856
+</td>
+<td style="text-align:right;">
+45.151
+</td>
+<td style="text-align:right;">
+4.738
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+offcampus_work_hours
+</td>
+<td style="text-align:right;">
+1.042
+</td>
+<td style="text-align:right;">
+1.022
+</td>
+<td style="text-align:right;">
+1.062
+</td>
+<td style="text-align:right;">
+4.199
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+cumulative_gpa
+</td>
+<td style="text-align:right;">
+0.027
+</td>
+<td style="text-align:right;">
+0.012
+</td>
+<td style="text-align:right;">
+0.064
+</td>
+<td style="text-align:right;">
+-8.335
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<sup></sup> Standard errors: MLE
+</td>
+</tr>
+</tfoot>
+</table>
+</div>
+</div>
+<p>Interpretation of control predictor <code>cumulative_gpa</code>:</p>
+<p><strong>Response:</strong> _______________________</p>
+<p>Significance of predictor estimate:</p>
+<p><strong>Response:</strong> _______________________</p>
+<p>How did the addition of the control variable to the model affect the focal predictor est/sig?</p>
+<p><strong>Response:</strong> _______________________</p>
+<hr>
+</section>
+<section id="group-3-add-the-control-variable-enrollment_units-to-the-model" class="level3">
+<h3 class="anchored" data-anchor-id="group-3-add-the-control-variable-enrollment_units-to-the-model">GROUP 3: Add the control variable <code>enrollment_units</code> to the model</h3>
+<p><strong>Instructions:</strong></p>
+<ol type="1">
+<li>Estimate the following logistic regression model:</li>
+</ol>
+<p><em>dropped_out = ⍺ + β1(offcampus_work_hours) + β2(cumulative_gpa) + β3(enrollment_units)</em></p>
+<ol start="2" type="1">
+<li>Interpret the Odds Ratio of the predictor <code>enrollment_units</code> as percent change</li>
+</ol>
+<p><strong>OR-to-Percent-Change Equation:</strong> Percent Change = (1 - OR)*100</p>
+<ol start="3" type="1">
+<li><p>Is the predictor estimate for <code>enrollment_units</code> significant?</p></li>
+<li><p>How did the addition of the control variable to the model affect the focal predictor est/sig?</p></li>
+</ol>
+<hr>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>mstep3_persist <span class="ot">&lt;-</span> <span class="fu">glm</span>(dropped_out <span class="sc">~</span> </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>                   offcampus_work_hours <span class="sc">+</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>                   cumulative_gpa <span class="sc">+</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                   enrollment_units,</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> cc_data, <span class="at">family =</span> <span class="fu">binomial</span>())</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summ</span>(mstep3_persist, <span class="at">exp =</span> <span class="cn">TRUE</span>, <span class="at">model.fit =</span> <span class="cn">FALSE</span>, <span class="at">model.info =</span> <span class="cn">FALSE</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+exp(Est.)
+</th>
+<th style="text-align:right;">
+2.5%
+</th>
+<th style="text-align:right;">
+97.5%
+</th>
+<th style="text-align:right;">
+z val.
+</th>
+<th style="text-align:right;">
+p
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+12.962
+</td>
+<td style="text-align:right;">
+3.661
+</td>
+<td style="text-align:right;">
+45.890
+</td>
+<td style="text-align:right;">
+3.972
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+offcampus_work_hours
+</td>
+<td style="text-align:right;">
+1.042
+</td>
+<td style="text-align:right;">
+1.022
+</td>
+<td style="text-align:right;">
+1.063
+</td>
+<td style="text-align:right;">
+4.213
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+cumulative_gpa
+</td>
+<td style="text-align:right;">
+0.027
+</td>
+<td style="text-align:right;">
+0.011
+</td>
+<td style="text-align:right;">
+0.063
+</td>
+<td style="text-align:right;">
+-8.313
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+enrollment_units
+</td>
+<td style="text-align:right;">
+1.015
+</td>
+<td style="text-align:right;">
+0.947
+</td>
+<td style="text-align:right;">
+1.088
+</td>
+<td style="text-align:right;">
+0.431
+</td>
+<td style="text-align:right;">
+0.666
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<sup></sup> Standard errors: MLE
+</td>
+</tr>
+</tfoot>
+</table>
+</div>
+</div>
+<p>Interpretation of control predictor <code>enrollment_units</code>:</p>
+<p><strong>Response:</strong> _______________________</p>
+<p>Significance of predictor estimate:</p>
+<p><strong>Response:</strong> _______________________</p>
+<p>How did the addition of the control variable to the model affect the focal predictor est/sig?</p>
+<p><strong>Response:</strong> _______________________</p>
+<hr>
+</section>
+<section id="group-4-add-the-control-variable-financial_aid-to-the-model" class="level3">
+<h3 class="anchored" data-anchor-id="group-4-add-the-control-variable-financial_aid-to-the-model">GROUP 4: Add the control variable <code>financial_aid</code> to the model</h3>
+<p><strong>Instructions:</strong></p>
+<ol type="1">
+<li>Estimate the following logistic regression model:</li>
+</ol>
+<p><em>dropped_out = ⍺ + β1(offcampus_work_hours) + β2(cumulative_gpa) + β3(enrollment_units) + β4(financial_aid)</em></p>
+<ol start="2" type="1">
+<li>Interpret the Odds Ratio of the predictor <code>financial_aid</code> as percent change</li>
+</ol>
+<p><strong>OR-to-Percent-Change Equation:</strong> Percent Change = (1 - OR)*100</p>
+<ol start="3" type="1">
+<li><p>Is the predictor estimate for <code>financial_aid</code> significant?</p></li>
+<li><p>How did the addition of the control variable to the model affect the focal predictor est/sig?</p></li>
+</ol>
+<hr>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>mstep4_persist <span class="ot">&lt;-</span> <span class="fu">glm</span>(dropped_out <span class="sc">~</span> </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>                   offcampus_work_hours <span class="sc">+</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>                   cumulative_gpa <span class="sc">+</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>                   enrollment_units <span class="sc">+</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>                   financial_aid,</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> cc_data, <span class="at">family =</span> <span class="fu">binomial</span>())</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summ</span>(mstep4_persist, <span class="at">exp =</span> <span class="cn">TRUE</span>, <span class="at">model.fit =</span> <span class="cn">FALSE</span>, <span class="at">model.info =</span> <span class="cn">FALSE</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+exp(Est.)
+</th>
+<th style="text-align:right;">
+2.5%
+</th>
+<th style="text-align:right;">
+97.5%
+</th>
+<th style="text-align:right;">
+z val.
+</th>
+<th style="text-align:right;">
+p
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+17.269
+</td>
+<td style="text-align:right;">
+4.478
+</td>
+<td style="text-align:right;">
+66.598
+</td>
+<td style="text-align:right;">
+4.137
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+offcampus_work_hours
+</td>
+<td style="text-align:right;">
+1.044
+</td>
+<td style="text-align:right;">
+1.024
+</td>
+<td style="text-align:right;">
+1.065
+</td>
+<td style="text-align:right;">
+4.339
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+cumulative_gpa
+</td>
+<td style="text-align:right;">
+0.026
+</td>
+<td style="text-align:right;">
+0.011
+</td>
+<td style="text-align:right;">
+0.061
+</td>
+<td style="text-align:right;">
+-8.267
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+enrollment_units
+</td>
+<td style="text-align:right;">
+1.011
+</td>
+<td style="text-align:right;">
+0.943
+</td>
+<td style="text-align:right;">
+1.084
+</td>
+<td style="text-align:right;">
+0.308
+</td>
+<td style="text-align:right;">
+0.758
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+financial_aid1
+</td>
+<td style="text-align:right;">
+0.669
+</td>
+<td style="text-align:right;">
+0.365
+</td>
+<td style="text-align:right;">
+1.227
+</td>
+<td style="text-align:right;">
+-1.299
+</td>
+<td style="text-align:right;">
+0.194
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<sup></sup> Standard errors: MLE
+</td>
+</tr>
+</tfoot>
+</table>
+</div>
+</div>
+<p>Interpretation of control predictor <code>financial_aid</code>:</p>
+<p><strong>Response:</strong> _______________________</p>
+<p>Significance of predictor estimate:</p>
+<p><strong>Response:</strong> _______________________</p>
+<p>How did the addition of the control variable to the model affect the focal predictor est/sig?</p>
+<p><strong>Response:</strong> _______________________</p>
+<hr>
+</section>
+<section id="do-adverse-childhood-experiences-aces-increase-likelihood-of-commiting-a-violent-crime" class="level3">
+<h3 class="anchored" data-anchor-id="do-adverse-childhood-experiences-aces-increase-likelihood-of-commiting-a-violent-crime">Do Adverse Childhood Experiences (ACEs) increase likelihood of commiting a violent crime?</h3>
+<blockquote class="blockquote">
+<p>Data was simulated to approximately replicate findings from study:</p>
+</blockquote>
+<p><strong>Kazeem et al., 2020</strong>: Study Population (Nigeria): Incarcerated (N=253), Non-incarcerated (N=253)</p>
+<hr>
+<p>Read in the simulated data &amp; specify factors (&amp; factor levels) of categorical variables:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>ace_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"ACEs_violent_crime_SIM.csv"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">group =</span> <span class="fu">factor</span>(group, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"non_incarcerated"</span>,<span class="st">"incarcerated"</span>)),</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">sex =</span> <span class="fu">factor</span>(sex),</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">education_level =</span> <span class="fu">factor</span>(education_level,</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"no_school"</span>,<span class="st">"&lt;primary"</span>,<span class="st">"primary"</span>,<span class="st">"secondary"</span>,<span class="st">"college"</span>,<span class="st">"postgrad"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">violent_crime =</span> <span class="fu">factor</span>(violent_crime, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(violent_crime, ace_family_env, ace_peer_violence, ace_community_violence,</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>         ace_war_exposure, ses_low, age, education_level, sex, ethnicity)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Plot the categorical outcome &amp; view response proportions for each category:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bar_plot</span>(</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> ace_data,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x_var =</span> violent_crime,</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x_label =</span> <span class="st">"Participant Committed a Violent Crime"</span>,</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"Categorical Outcome Variable Violent Crime"</span>) <span class="sc">+</span> </span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">subtitle =</span> <span class="st">"Sample Population (Nigeria): Incarcerated (N=253), Non-incarcerated (N=253)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Week9_Lab_KEY_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="group-5-estimate-the-regression-of-the-outcome-predicted-by-focal-predictor" class="level3">
+<h3 class="anchored" data-anchor-id="group-5-estimate-the-regression-of-the-outcome-predicted-by-focal-predictor">GROUP 5: Estimate the regression of the outcome predicted by focal predictor</h3>
+<p><strong>Instructions:</strong></p>
+<ol type="1">
+<li>Estimate the following logistic regression model:</li>
+</ol>
+<p><em>violent_crime = ⍺ + β1(ace_family_env)</em></p>
+<ol start="2" type="1">
+<li>Convert the intercept from Odds-Ratio (OR) to probability and interpret:</li>
+</ol>
+<p><strong>OR-to-Probability Equation:</strong> Probability = OR_intercept / (1 + OR_intercept)</p>
+<ol start="3" type="1">
+<li>Interpret the Odds Ratio of the predictor <code>ace_family_env</code> as percent change</li>
+</ol>
+<p><strong>OR-to-Percent-Change Equation:</strong> Percent Change = (1 - OR)*100</p>
+<ol start="4" type="1">
+<li>Is the predictor estimate for <code>ace_family_env</code> significant?</li>
+</ol>
+<hr>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>mstep1_aces <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  violent_crime <span class="sc">~</span> ace_family_env,</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> ace_data,</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>())</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summ</span>(mstep1_aces, <span class="at">exp =</span> <span class="cn">TRUE</span>, <span class="at">model.fit =</span> <span class="cn">FALSE</span>, <span class="at">model.info =</span> <span class="cn">FALSE</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+exp(Est.)
+</th>
+<th style="text-align:right;">
+2.5%
+</th>
+<th style="text-align:right;">
+97.5%
+</th>
+<th style="text-align:right;">
+z val.
+</th>
+<th style="text-align:right;">
+p
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+0.099
+</td>
+<td style="text-align:right;">
+0.063
+</td>
+<td style="text-align:right;">
+0.157
+</td>
+<td style="text-align:right;">
+-9.853
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+ace_family_env
+</td>
+<td style="text-align:right;">
+3.225
+</td>
+<td style="text-align:right;">
+2.589
+</td>
+<td style="text-align:right;">
+4.017
+</td>
+<td style="text-align:right;">
+10.448
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<sup></sup> Standard errors: MLE
+</td>
+</tr>
+</tfoot>
+</table>
+</div>
+</div>
+<p>Interpretation of intercept (probability):</p>
+<p><strong>Response:</strong> _______________________</p>
+<p>Interpretation of focal predictor:</p>
+<p><strong>Response:</strong> _______________________</p>
+<p>Significance of predictor estimate:</p>
+<p><strong>Response:</strong> _______________________</p>
+<hr>
+</section>
+<section id="group-6-add-the-control-variable-ace_peer_violence-to-the-model" class="level3">
+<h3 class="anchored" data-anchor-id="group-6-add-the-control-variable-ace_peer_violence-to-the-model">GROUP 6: Add the control variable <code>ace_peer_violence</code> to the model</h3>
+<p><strong>Instructions:</strong></p>
+<ol type="1">
+<li>Estimate the following logistic regression model:</li>
+</ol>
+<p><em>violent_crime = ⍺ + β1(ace_family_env) + β2(ace_peer_violence)</em></p>
+<ol start="2" type="1">
+<li>Interpret the Odds Ratio of the predictor <code>ace_peer_violence</code> as percent change</li>
+</ol>
+<p><strong>OR-to-Percent-Change Equation:</strong> Percent Change = (1 - OR)*100</p>
+<ol start="3" type="1">
+<li><p>Is the predictor estimate for <code>ace_peer_violence</code> significant?</p></li>
+<li><p>How did the addition of the control variable to the model affect the focal predictor est/sig?</p></li>
+</ol>
+<hr>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>mstep2_aces <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  violent_crime <span class="sc">~</span> ace_family_env <span class="sc">+</span> ace_peer_violence,</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> ace_data,</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>())</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summ</span>(mstep2_aces, <span class="at">exp =</span> <span class="cn">TRUE</span>, <span class="at">model.fit =</span> <span class="cn">FALSE</span>, <span class="at">model.info =</span> <span class="cn">FALSE</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+exp(Est.)
+</th>
+<th style="text-align:right;">
+2.5%
+</th>
+<th style="text-align:right;">
+97.5%
+</th>
+<th style="text-align:right;">
+z val.
+</th>
+<th style="text-align:right;">
+p
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+0.005
+</td>
+<td style="text-align:right;">
+0.002
+</td>
+<td style="text-align:right;">
+0.011
+</td>
+<td style="text-align:right;">
+-11.531
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+ace_family_env
+</td>
+<td style="text-align:right;">
+3.138
+</td>
+<td style="text-align:right;">
+2.363
+</td>
+<td style="text-align:right;">
+4.168
+</td>
+<td style="text-align:right;">
+7.901
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+ace_peer_violence
+</td>
+<td style="text-align:right;">
+2.432
+</td>
+<td style="text-align:right;">
+2.053
+</td>
+<td style="text-align:right;">
+2.881
+</td>
+<td style="text-align:right;">
+10.282
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<sup></sup> Standard errors: MLE
+</td>
+</tr>
+</tfoot>
+</table>
+</div>
+</div>
+<p>Interpretation of control predictor:</p>
+<p><strong>Response:</strong> _______________________</p>
+<p>Significance of predictor estimate:</p>
+<p><strong>Response:</strong> _______________________</p>
+<p>How did the addition of the control variable to the model affect the focal predictor est/sig?</p>
+<p><strong>Response:</strong> _______________________</p>
+<hr>
+</section>
+<section id="group-7-add-the-control-variable-ace_community_violence-to-the-model" class="level3">
+<h3 class="anchored" data-anchor-id="group-7-add-the-control-variable-ace_community_violence-to-the-model">GROUP 7: Add the control variable <code>ace_community_violence</code> to the model</h3>
+<p><strong>Instructions:</strong></p>
+<ol type="1">
+<li>Estimate the following logistic regression model:</li>
+</ol>
+<p><em>violent_crime = ⍺ + β1(ace_family_env) + β2(ace_peer_violence) + β3(ace_community_violence)</em></p>
+<ol start="2" type="1">
+<li>Interpret the Odds Ratio of the predictor <code>ace_community_violence</code> as percent change</li>
+</ol>
+<p><strong>OR-to-Percent-Change Equation:</strong> Percent Change = (1 - OR)*100</p>
+<ol start="3" type="1">
+<li>Is the predictor estimate for <code>ace_community_violence</code> significant?</li>
+</ol>
+<hr>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>mstep3_aces <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  violent_crime <span class="sc">~</span> </span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    ace_family_env <span class="sc">+</span> ace_peer_violence <span class="sc">+</span> ace_community_violence,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> ace_data,</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>())</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summ</span>(mstep3_aces, <span class="at">exp =</span> <span class="cn">TRUE</span>, <span class="at">model.fit =</span> <span class="cn">FALSE</span>, <span class="at">model.info =</span> <span class="cn">FALSE</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+exp(Est.)
+</th>
+<th style="text-align:right;">
+2.5%
+</th>
+<th style="text-align:right;">
+97.5%
+</th>
+<th style="text-align:right;">
+z val.
+</th>
+<th style="text-align:right;">
+p
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+0.002
+</td>
+<td style="text-align:right;">
+0.001
+</td>
+<td style="text-align:right;">
+0.005
+</td>
+<td style="text-align:right;">
+-11.489
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+ace_family_env
+</td>
+<td style="text-align:right;">
+2.968
+</td>
+<td style="text-align:right;">
+2.208
+</td>
+<td style="text-align:right;">
+3.991
+</td>
+<td style="text-align:right;">
+7.203
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+ace_peer_violence
+</td>
+<td style="text-align:right;">
+2.338
+</td>
+<td style="text-align:right;">
+1.958
+</td>
+<td style="text-align:right;">
+2.792
+</td>
+<td style="text-align:right;">
+9.375
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+ace_community_violence
+</td>
+<td style="text-align:right;">
+1.702
+</td>
+<td style="text-align:right;">
+1.411
+</td>
+<td style="text-align:right;">
+2.053
+</td>
+<td style="text-align:right;">
+5.556
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<sup></sup> Standard errors: MLE
+</td>
+</tr>
+</tfoot>
+</table>
+</div>
+</div>
+<p>Interpretation of control predictor:</p>
+<p><strong>Response:</strong> _______________________</p>
+<p>Significance of predictor estimate:</p>
+<p><strong>Response:</strong> _______________________</p>
+<hr>
+</section>
+<section id="group-8-add-the-control-variable-ace_war_exposure-to-the-model" class="level3">
+<h3 class="anchored" data-anchor-id="group-8-add-the-control-variable-ace_war_exposure-to-the-model">GROUP 8: Add the control variable <code>ace_war_exposure</code> to the model</h3>
+<p><strong>Instructions:</strong></p>
+<ol type="1">
+<li>Estimate the following logistic regression model:</li>
+</ol>
+<p><em>violent_crime = ⍺ + β1(ace_family_env) + β2(ace_peer_violence) + β3(ace_community_violence) + β4(ace_war_exposure)</em></p>
+<ol start="2" type="1">
+<li>Interpret the Odds Ratio of the predictor <code>ace_war_exposure</code> as percent change</li>
+</ol>
+<p><strong>OR-to-Percent-Change Equation:</strong> Percent Change = (1 - OR)*100</p>
+<ol start="3" type="1">
+<li>Is the predictor estimate for <code>ace_war_exposure</code> significant?</li>
+</ol>
+<hr>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>mstep4_aces <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  violent_crime <span class="sc">~</span> </span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  ace_family_env <span class="sc">+</span> ace_peer_violence <span class="sc">+</span> ace_community_violence <span class="sc">+</span> ace_war_exposure,</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> ace_data,</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>())</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summ</span>(mstep4_aces, <span class="at">exp =</span> <span class="cn">TRUE</span>, <span class="at">model.fit =</span> <span class="cn">FALSE</span>, <span class="at">model.info =</span> <span class="cn">FALSE</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+exp(Est.)
+</th>
+<th style="text-align:right;">
+2.5%
+</th>
+<th style="text-align:right;">
+97.5%
+</th>
+<th style="text-align:right;">
+z val.
+</th>
+<th style="text-align:right;">
+p
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+0.001
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.003
+</td>
+<td style="text-align:right;">
+-10.392
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+ace_family_env
+</td>
+<td style="text-align:right;">
+2.520
+</td>
+<td style="text-align:right;">
+1.739
+</td>
+<td style="text-align:right;">
+3.652
+</td>
+<td style="text-align:right;">
+4.882
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+ace_peer_violence
+</td>
+<td style="text-align:right;">
+1.894
+</td>
+<td style="text-align:right;">
+1.536
+</td>
+<td style="text-align:right;">
+2.335
+</td>
+<td style="text-align:right;">
+5.982
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+ace_community_violence
+</td>
+<td style="text-align:right;">
+1.348
+</td>
+<td style="text-align:right;">
+1.064
+</td>
+<td style="text-align:right;">
+1.709
+</td>
+<td style="text-align:right;">
+2.471
+</td>
+<td style="text-align:right;">
+0.013
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+ace_war_exposure
+</td>
+<td style="text-align:right;">
+3.196
+</td>
+<td style="text-align:right;">
+2.355
+</td>
+<td style="text-align:right;">
+4.337
+</td>
+<td style="text-align:right;">
+7.460
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<sup></sup> Standard errors: MLE
+</td>
+</tr>
+</tfoot>
+</table>
+</div>
+</div>
+<p>Interpretation of control predictor:</p>
+<p><strong>Response:</strong> _______________________</p>
+<p>Significance of predictor estimate:</p>
+<p><strong>Response:</strong> _______________________</p>
+<hr>
+</section>
+<section id="group-9-add-the-control-variable-ses_low-to-the-model" class="level3">
+<h3 class="anchored" data-anchor-id="group-9-add-the-control-variable-ses_low-to-the-model">GROUP 9: Add the control variable <code>ses_low</code> to the model</h3>
+<p><strong>Instructions:</strong></p>
+<ol type="1">
+<li>Estimate the following logistic regression model:</li>
+</ol>
+<p><em>violent_crime = ⍺ + β1(ace_family_env) + β2(ace_peer_violence) + β3(ace_community_violence) + β4(ace_war_exposure) + β5(ses_low)</em></p>
+<ol start="2" type="1">
+<li>Interpret the Odds Ratio of the predictor <code>ses_low</code> as percent change</li>
+</ol>
+<p><strong>OR-to-Percent-Change Equation:</strong> Percent Change = (1 - OR)*100</p>
+<ol start="3" type="1">
+<li>Is the predictor estimate for <code>ses_low</code> significant?</li>
+</ol>
+<hr>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>mstep5_aces <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  violent_crime <span class="sc">~</span> </span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    ace_family_env <span class="sc">+</span> ace_peer_violence <span class="sc">+</span> ace_community_violence <span class="sc">+</span> ace_war_exposure <span class="sc">+</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    ses_low,</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> ace_data,</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>())</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summ</span>(mstep5_aces, <span class="at">exp =</span> <span class="cn">TRUE</span>, <span class="at">model.fit =</span> <span class="cn">FALSE</span>, <span class="at">model.info =</span> <span class="cn">FALSE</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+exp(Est.)
+</th>
+<th style="text-align:right;">
+2.5%
+</th>
+<th style="text-align:right;">
+97.5%
+</th>
+<th style="text-align:right;">
+z val.
+</th>
+<th style="text-align:right;">
+p
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.001
+</td>
+<td style="text-align:right;">
+-9.779
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+ace_family_env
+</td>
+<td style="text-align:right;">
+2.572
+</td>
+<td style="text-align:right;">
+1.747
+</td>
+<td style="text-align:right;">
+3.788
+</td>
+<td style="text-align:right;">
+4.784
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+ace_peer_violence
+</td>
+<td style="text-align:right;">
+1.976
+</td>
+<td style="text-align:right;">
+1.573
+</td>
+<td style="text-align:right;">
+2.483
+</td>
+<td style="text-align:right;">
+5.847
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+ace_community_violence
+</td>
+<td style="text-align:right;">
+1.292
+</td>
+<td style="text-align:right;">
+1.010
+</td>
+<td style="text-align:right;">
+1.652
+</td>
+<td style="text-align:right;">
+2.042
+</td>
+<td style="text-align:right;">
+0.041
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+ace_war_exposure
+</td>
+<td style="text-align:right;">
+2.818
+</td>
+<td style="text-align:right;">
+2.071
+</td>
+<td style="text-align:right;">
+3.834
+</td>
+<td style="text-align:right;">
+6.597
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+ses_low
+</td>
+<td style="text-align:right;">
+6.512
+</td>
+<td style="text-align:right;">
+2.585
+</td>
+<td style="text-align:right;">
+16.406
+</td>
+<td style="text-align:right;">
+3.975
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<sup></sup> Standard errors: MLE
+</td>
+</tr>
+</tfoot>
+</table>
+</div>
+</div>
+<p>Interpretation of control predictor:</p>
+<p><strong>Response:</strong> _______________________</p>
+<p>Significance of predictor estimate:</p>
+<p><strong>Response:</strong> _______________________</p>
+<hr>
+</section>
+<section id="group-10-add-the-control-variable-sex-to-the-model" class="level3">
+<h3 class="anchored" data-anchor-id="group-10-add-the-control-variable-sex-to-the-model">GROUP 10: Add the control variable <code>sex</code> to the model</h3>
+<p><strong>Instructions:</strong></p>
+<ol type="1">
+<li>Estimate the following logistic regression model:</li>
+</ol>
+<p><em>violent_crime = ⍺ + β1(ace_family_env) + β2(ace_peer_violence) + β3(ace_community_violence) + β4(ace_war_exposure) + β5(ses_low) + β6(sex)</em></p>
+<ol start="2" type="1">
+<li>Interpret the Odds Ratio of the predictor <code>sex</code> as percent change</li>
+</ol>
+<p><strong>OR-to-Percent-Change Equation:</strong> Percent Change = (1 - OR)*100</p>
+<ol start="3" type="1">
+<li>Is the predictor estimate for <code>sex</code> significant?</li>
+</ol>
+<hr>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>mstep6_aces <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  violent_crime <span class="sc">~</span> </span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    ace_family_env <span class="sc">+</span> ace_peer_violence <span class="sc">+</span> ace_community_violence <span class="sc">+</span> ace_war_exposure <span class="sc">+</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    ses_low <span class="sc">+</span> </span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    sex,</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> ace_data,</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>())</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="fu">summ</span>(mstep6_aces, <span class="at">exp =</span> <span class="cn">TRUE</span>, <span class="at">model.fit =</span> <span class="cn">FALSE</span>, <span class="at">model.info =</span> <span class="cn">FALSE</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+exp(Est.)
+</th>
+<th style="text-align:right;">
+2.5%
+</th>
+<th style="text-align:right;">
+97.5%
+</th>
+<th style="text-align:right;">
+z val.
+</th>
+<th style="text-align:right;">
+p
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.001
+</td>
+<td style="text-align:right;">
+-9.470
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+ace_family_env
+</td>
+<td style="text-align:right;">
+2.536
+</td>
+<td style="text-align:right;">
+1.702
+</td>
+<td style="text-align:right;">
+3.777
+</td>
+<td style="text-align:right;">
+4.574
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+ace_peer_violence
+</td>
+<td style="text-align:right;">
+1.902
+</td>
+<td style="text-align:right;">
+1.518
+</td>
+<td style="text-align:right;">
+2.382
+</td>
+<td style="text-align:right;">
+5.591
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+ace_community_violence
+</td>
+<td style="text-align:right;">
+1.288
+</td>
+<td style="text-align:right;">
+1.001
+</td>
+<td style="text-align:right;">
+1.659
+</td>
+<td style="text-align:right;">
+1.966
+</td>
+<td style="text-align:right;">
+0.049
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+ace_war_exposure
+</td>
+<td style="text-align:right;">
+2.899
+</td>
+<td style="text-align:right;">
+2.112
+</td>
+<td style="text-align:right;">
+3.980
+</td>
+<td style="text-align:right;">
+6.582
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+ses_low
+</td>
+<td style="text-align:right;">
+5.986
+</td>
+<td style="text-align:right;">
+2.357
+</td>
+<td style="text-align:right;">
+15.202
+</td>
+<td style="text-align:right;">
+3.763
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+sexmale
+</td>
+<td style="text-align:right;">
+3.672
+</td>
+<td style="text-align:right;">
+1.419
+</td>
+<td style="text-align:right;">
+9.505
+</td>
+<td style="text-align:right;">
+2.681
+</td>
+<td style="text-align:right;">
+0.007
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<sup></sup> Standard errors: MLE
+</td>
+</tr>
+</tfoot>
+</table>
+</div>
+</div>
+<p>Interpretation of control predictor:</p>
+<p><strong>Response:</strong> _______________________</p>
+<p>Significance of predictor estimate:</p>
+<p><strong>Response:</strong> _______________________</p>
+<hr>
+<hr>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
