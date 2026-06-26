@@ -1,0 +1,360 @@
+---
+title: "Week 11 Lab - Explore Categoical Variable Associations"
+subtitle: "*PSY 150* - The Chi-Square Test of Indepenedence"
+author: "KEY"
+date: "`r Sys.Date()`"
+output: 
+    html_document
+---
+
+```{r setup, echo=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+options(scipen = 999)
+```
+
+------------------------------------------------------------------------
+
+### Outline 
+
+- Example demo (follow-along): Investigate associations between categorical variables
+- Lab Activity: Complete coding activity & answer questions exploring categorical variable associations
+
+------------------------------------------------------------------------
+
+Load packages 
+```{r}
+
+library(tidyverse)
+library(here)
+library(janitor)
+library(gt)
+library(gtsummary)
+library(gtExtras)
+library(praise)
+library(beepr)
+
+```
+
+------------------------------------------------------------------------
+
+### Read in the Simulated data
+
+------------------------------------------------------------------------
+
+```{r}
+set.seed(2025)
+
+psy150_data <- read_csv(here("data", "psy150_survey_data.csv")) %>% 
+    mutate(across(c(fav_season:birth_month, risk_pref, study_sound), as.factor)) %>% 
+    mutate(wake_up_time = factor(wake_up_time, 
+      levels = c("6 am", "7 am", "8 am", "9 am", "10 am", "11 am", "12 pm", "1 pm (or later)"))) %>%
+   mutate(wake_up_time = as.numeric(wake_up_time)+5) %>% 
+   mutate(risk_pref = factor(risk_pref, 
+      levels = c("A sure $10", "A 50% chance to win $24"),
+      labels = c("Low Risk", "High Risk"))) %>% 
+   mutate(random_groups = sample(rep(c("control", "treatment"), each = n()/2)))
+
+```
+
+------------------------------------------------------------------------
+
+### Are the categorical variables `risk_pref` & `random_groups` related (or independent)?
+
+------------------------------------------------------------------------
+
+### Make a Contingency Table using `tbl_summary()`
+
+
+```{r}
+chi_table <- psy150_data %>% 
+    select(random_groups, risk_pref) %>% 
+    tbl_summary(by = random_groups)
+
+chi_table
+```
+
+------------------------------------------------------------------------
+
+### Add Chi-Square Test Result to Table
+
+Include Chi-Square test result (*p-value*) indicating `independence` or `non-independence`
+```{r}
+
+chi_table %>% add_p()
+
+```
+
+------------------------------------------------------------------------
+
+### Contingency Table with Marginal Totals
+
+Create contingency table using `tabyl()` & add marginal totals with `adorn_totals()`
+```{r}
+
+psy150_data %>% 
+tabyl(risk_pref, random_groups) %>% 
+  adorn_totals(where = c("row", "col")) %>% 
+  gt()
+ 
+```
+
+------------------------------------------------------------------------
+
+### Compare *expected frequencies* (assuming independence) with the *observed frequencies* 
+
+- Null Hypothesis (H0; independence): Variables are unrelated
+- Alternative Hypothesis (H1: non-independence): Variables are related
+- Expected Frequencies: What we would expect if the 2 variables are independent 
+- Chi-Square Test (purpose): To determine whether the *observed freq.* provide evidence of an association (or not)
+
+```{r}
+
+chi_results <- psy150_data %>% 
+  tabyl(risk_pref, random_groups) %>% 
+  chisq.test(correct = FALSE)
+  
+tbl_obs <- chi_results$observed %>% 
+  gt() %>%
+  gt::tab_header(title = "observed")
+
+tbl_exp <- chi_results$expected %>% 
+  gt() %>% 
+  gt::tab_header(title = "expected")
+
+gt_two_column_layout(list(tbl_obs, tbl_exp))
+
+```
+
+------------------------------------------------------------------------
+
+### Estimate the Chi-Square Test Statisitic using `chisq.test()`
+
+`chisq.test()` returns 3 important parts of the Chi-Square Test:
+
+1. Chi-Square Statistic Estimate (`X-squared`)
+2. Degrees of Freedom (`df`): $df = (RowNumber -1)*(ColumnNumber - 1)$
+3. P-Value Estimate (Critical value determined by `alpha = .05` and `df = 1`) 
+
+```{r}
+
+psy150_data %>% 
+  tabyl(risk_pref, random_groups) %>% 
+  chisq.test(correct = FALSE)
+  
+```
+
+------------------------------------------------------------------------
+
+### Lab Activity - Exploring Categorical Variable Relations
+
+- Step 1: Read in the data needed for each example
+- Step 2: Complete the coding task described in the directions 
+- Step 3: Read questions after each coding task → Interpret output & respond to questions
+
+------------------------------------------------------------------------
+
+### Example 1: Anxiety During COVID by Occupation
+
+**Study source:** Kush et al. (2022) *Teachers’ Mental Health During the COVID-19 Pandemic*
+
+Read in the simulated teacher mental health data:
+```{r}
+
+teachr_data <- read_csv(here("data", "teachers_anx_covid_sim.csv")) %>% 
+  mutate(across(c(occupation:occupation2), as.factor)) %>% 
+  mutate(anxiety = factor(anxiety, levels = c(0,1), labels = c("Low Anxiety", "High Anxiety"))) %>%
+  mutate(occupation2 = factor(occupation2, levels = c("all_others","teachers"),
+         labels = c("Other Occupations", "Teachers"))) 
+
+```
+
+------------------------------------------------------------------------
+
+### Are categorical variables `anxiety` & `occupation2` related? 
+
+- `anxiety` (factor levels): `Low Anxiety`, `High Anxiety`
+- `occupation2` (factor levels): `Other Occupations`, `Teachers`
+
+------------------------------------------------------------------------
+
+### Create a contingency table with marginal totals
+
+- Use functions: `tabyl()` + `adorn_totals()` + `gt()`
+- HINT: Find the corresponding code example above → Update with new data & variables 
+
+```{r}
+
+teachr_data %>% 
+  tabyl(anxiety, occupation2) %>% 
+  adorn_totals(where = c("row", "col")) %>% 
+  gt()
+
+```
+
+**Question:**  What percent of the sample are `Teachers` & what percent of the sample have `Other Occupations`?
+
+**Response:** __________________________________
+
+**Question:**  What percent of `Teachers` reported `Low Anxiety`? [AND] What percent of `Teachers` reported `High Anxiety`?
+
+**Response:** __________________________________
+
+------------------------------------------------------------------------
+
+### Estimate the critical value for this chi-square test (i.e., the significance threshold)
+
+- Choose level of significance (`alpha`) & use function `qchisq()` to determine the `critical value`
+- HINT: The `qchisq()` function requires 2 inputs `alpha` and `df`(*degrees of freedom*). 
+
+```{r}
+# Choose alpha (level of significance) 
+alpha <- .05
+
+qchisq(p = 1-alpha, df = 1)
+```
+
+**Question:**  Determine the *degrees of freedom* for a chi-square test using the contingency table above:
+
+**Response:** __________________________________
+
+**Question:** If the estimated `chi-square statistic` is **greater than** the `critical value` what does this tell us about the association between the two categorical variables? [AND]
+
+What does it mean when `chi-square statistic` is **less than** the `critical value`?
+
+**Response:** __________________________________
+
+------------------------------------------------------------------------
+
+### Estimate the Chi-Square test of independence for `anxiety` and `occupation2`
+
+- Use functions: `tabyl()` + `chisq.test()`
+- HINT: Find the corresponding code example above → Update with new data & variables 
+
+```{r}
+
+teachr_data %>% 
+  tabyl(anxiety, occupation2) %>% 
+  chisq.test(correct = FALSE)
+
+```
+
+**Question:**  What does the result of the test tell us about association between the two categorical variables? 
+
+**Response:** __________________________________
+
+
+------------------------------------------------------------------------
+
+### Example 2: Are the categorical variables `dropped_out` & `gender` related?
+
+**Study source:** Nakajima et al. (2012) *Student Persistence in Community Colleges*
+
+- `dropped_out` (factor levels): `Enrolled`, `Dropped Out`
+- `gender` (factor levels): `Female`, `Male`
+
+------------------------------------------------------------------------
+
+Read in the simulated city college persistence data:
+```{r}
+
+cc_data <- read_csv(here("data", "city_college_persistence_sim.csv")) %>% 
+  mutate(across(c(gender, race, financial_aid), as.factor)) %>%
+  mutate(dropped_out = factor(dropped_out, labels = c("Enrolled","Dropped Out")))
+  
+```
+
+------------------------------------------------------------------------
+
+### Create a contingency table
+
+Use functions: `tabyl()` + `gt()`
+```{r}
+
+cc_data %>% 
+  tabyl(dropped_out, gender) %>% 
+  gt()
+
+```
+
+**Question:**  What percent of female students dropped out? [AND] What percent of male students dropped out?
+
+**Response:** __________________________________
+
+Estimate the Chi-Square Test of Independence 
+```{r}
+
+cc_data %>% 
+  tabyl(dropped_out, gender) %>% 
+  chisq.test(correct = FALSE)
+
+```
+
+**Question:**  What does the result of the test tell us about association between the two categorical variables? 
+
+**Response:** __________________________________
+
+------------------------------------------------------------------------
+
+### Example 3: Are the categorical variables `ethnicity` & `ses_low` related?
+
+**Study source:** Kazeem et al. (2020) *Adverse Childhood Experiences, Socio-Economic Status, and Criminal Behaviour: a Cross-Sectional Correctional Survey*
+
+- `ethnicity` (factor levels): `Hausa`, `Igbo`, `Yoruba`, `Other`
+- `ses_low` (factor levels): `High (SES)`, `Low (SES)`
+
+------------------------------------------------------------------------
+
+Read in simulated data on Adverse Childhood Experiences (ACEs) and crime 
+```{r}
+ace_data <- read_csv(here("data", "ACEs_violent_crime_SIM.csv")) |>
+  mutate(
+   ethnicity = factor(ethnicity,
+      levels = c("hausa","igbo","yoruba","other"),
+      labels = c("Hausa","Igbo","Yoruba","Other"))) %>%
+  mutate(ses_low = factor(ses_low, labels = c("High (SES)", "Low (SES)"))) 
+```
+
+### Create a contingency table
+
+Use functions: `tabyl()` + `gt()`
+```{r}
+
+ace_data %>% 
+  tabyl(ethnicity, ses_low) %>% 
+  gt()
+
+```
+
+**Question:**  Calculate the chi-square test degrees of freedom (`df`) for a contingency table of this size: 
+
+**Response:** __________________________________
+
+**Question:**  What percent of the sample in the `Hausa` ethnicity group reported `Low SES`? [AND] 
+
+What percent of the sample in the `Other` ethnicity group reported `Low SES`?
+
+**Response:** __________________________________
+
+Estimate the Chi-Square Test of Independence 
+```{r}
+
+ace_data %>% 
+  tabyl(ethnicity, ses_low) %>% 
+  chisq.test(correct = FALSE)
+
+```
+
+**Question:**  What does the result of the test tell us about association between the two categorical variables? 
+
+**Response:** __________________________________
+
+
+------------------------------------------------------------------------
+
+```{r}
+
+praise("${EXCLAMATION} - You have made it to the end of lab!!! You have ${created} something truely ${adjective}!"); beep(1)
+
+```
+
+------------------------------------------------------------------------
