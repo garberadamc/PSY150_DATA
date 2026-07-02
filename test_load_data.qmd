@@ -34,5 +34,9 @@ ai_data <- read_csv("https://garberadamc.github.io/PSY150_DATA/data/ai_student_m
 
 work_data <- read_csv("https://garberadamc.github.io/PSY150_DATA/data/offcampus_work_persistence_sim_N600.csv")
 
+music_data <- read_csv("https://garberadamc.github.io/PSY150_DATA/data/music_genre_edm_mental_health_sim_N600.csv")
+
+
+
 ```
 
